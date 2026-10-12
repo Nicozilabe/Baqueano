@@ -102,7 +102,7 @@ func migrateOldHistoryFile(newHistoryPath string) error {
 	}
 
 	// Write to new location
-	if err := os.WriteFile(newHistoryPath, data, 0644); err != nil {
+	if err := os.WriteFile(newHistoryPath, data, 0600); err != nil {
 		return err
 	}
 
