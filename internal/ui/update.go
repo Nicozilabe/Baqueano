@@ -1,9 +1,14 @@
 package ui
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
+	"net"
+	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/Gu1llaum-3/sshm/internal/config"
@@ -21,6 +26,22 @@ type (
 	versionErrorMsg error
 	errorMsg        string
 )
+
+// execFinishedMsg reports how an interactive ssh process ended
+type execFinishedMsg struct {
+	host   string
+	err    error
+	stderr string
+}
+
+// connectPreflightMsg reports the result of the reachability check
+type connectPreflightMsg struct {
+	hostName string
+	err      error
+}
+
+// spinnerTickMsg advances the "connecting" spinner animation
+type spinnerTickMsg struct{}
 
 // startPingAllCmd creates a command to ping all hosts concurrently
 func (m Model) startPingAllCmd() tea.Cmd {
@@ -168,6 +189,37 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if string(msg) == "clear" {
 			m.showingError = false
 			m.errorMessage = ""
+		}
+		return m, nil
+
+	case execFinishedMsg:
+		// Interactive ssh session ended; report failures instead of quitting silently
+		if msg.err != nil {
+			details := strings.TrimSpace(msg.stderr)
+			if details == "" {
+				details = msg.err.Error()
+			}
+			m.showingError = true
+			m.errorMessage = fmt.Sprintf("Connection failed with %s: %s\n\nPress ENTER, ESC or SPACE to continue",
+				msg.host, details)
+			return m, nil
+		}
+		return m, tea.Quit
+
+	case connectPreflightMsg:
+		m.connectingHost = ""
+		if msg.err != nil {
+			m.showingError = true
+			m.errorMessage = fmt.Sprintf("Connection failed with %s: %s\n\nPress ENTER, ESC or SPACE to continue",
+				msg.hostName, msg.err.Error())
+			return m, nil
+		}
+		return m, m.connectDirect(msg.hostName)
+
+	case spinnerTickMsg:
+		if m.connectingHost != "" {
+			m.spinnerFrame = (m.spinnerFrame + 1) % 10
+			return m, m.spinnerCmd()
 		}
 		return m, nil
 
@@ -354,7 +406,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			// Success: execute SSH command with port forwarding
 			if len(msg.sshArgs) > 0 {
-				sshCmd := exec.Command("ssh", msg.sshArgs...)
+				sshCmd := sshCommand(msg.sshArgs)
 
 				// Record the connection in history
 				if m.historyManager != nil && m.portForwardForm != nil {
@@ -364,9 +416,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 
-				return m, tea.ExecProcess(sshCmd, func(err error) tea.Msg {
-					return tea.Quit()
-				})
+				return m, runSSHProcess(sshCmd, m.portForwardForm.hostName)
 			}
 
 			// If no SSH args, just return to list view
@@ -455,6 +505,21 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	key := msg.String()
 
+	// While an error banner is shown, only allow dismissing it
+	if m.showingError {
+		switch key {
+		case "enter", "esc", " ", "q", "ctrl+c":
+			m.showingError = false
+			m.errorMessage = ""
+		}
+		return m, nil
+	}
+
+	// Ignore keys while a connection attempt is in progress
+	if m.connectingHost != "" {
+		return m, nil
+	}
+
 	switch key {
 	case "esc", "ctrl+c":
 		if m.deleteMode {
@@ -510,7 +575,12 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "enter":
 		if m.searchMode {
 			// Connect to the selected result; without result, stay in the search
-			return m, m.connectToSelectedHost()
+			selected := m.table.SelectedRow()
+			if len(selected) == 0 {
+				return m, nil
+			}
+			hostName := extractHostNameFromTableRow(selected[0])
+			return m.startConnect(hostName)
 		} else if m.deleteMode {
 			// Confirm deletion
 			var err error
@@ -556,8 +626,14 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.deleteHost = nil
 			m.table.Focus()
 			return m, nil
-		} else if cmd := m.connectToSelectedHost(); cmd != nil {
-			return m, cmd
+		} else {
+			// Connect to the selected host from the table
+			selected := m.table.SelectedRow()
+			if len(selected) == 0 {
+				return m, nil
+			}
+			hostName := extractHostNameFromTableRow(selected[0])
+			return m.startConnect(hostName)
 		}
 	case "e":
 		if !m.searchMode && !m.deleteMode {
@@ -785,33 +861,100 @@ func (m *Model) focusTable() {
 	m.table.Focus()
 }
 
-// connectToSelectedHost records the selected host in the history and returns
-// the command that runs ssh on it, or nil when no host is selected
-func (m Model) connectToSelectedHost() tea.Cmd {
-	selected := m.table.SelectedRow()
-	if len(selected) == 0 {
-		return nil
+// sshCommand builds the exec.Cmd for ssh, resolving the binary even when it is
+// not on PATH (e.g. 32-bit builds on Windows with OpenSSH in 64-bit System32).
+func sshCommand(args []string) *exec.Cmd {
+	sshPath, err := connectivity.FindSSHExecutable()
+	if err != nil {
+		// Let exec.Cmd produce the descriptive "not found" error at Run time.
+		return exec.Command("ssh", args...)
 	}
-	hostName := extractHostNameFromTableRow(selected[0]) // Extract hostname from first column
+	return exec.Command(sshPath, args...)
+}
 
-	// Record the connection in history
+// runSSHProcess hands the terminal to an interactive ssh process while keeping
+// its stderr (live on the terminal and buffered) so failures can be reported
+// in the TUI instead of being silently dropped.
+func runSSHProcess(sshCmd *exec.Cmd, hostName string) tea.Cmd {
+	var stderr bytes.Buffer
+	// ExecProcess only sets Stderr when it is nil, so hook it up to the
+	// console and keep a copy to surface connection errors afterwards.
+	if sshCmd.Stderr == nil {
+		sshCmd.Stderr = io.MultiWriter(os.Stderr, &stderr)
+	}
+
+	return tea.ExecProcess(sshCmd, func(err error) tea.Msg {
+		return execFinishedMsg{host: hostName, err: err, stderr: stderr.String()}
+	})
+}
+
+// startConnect kicks off a connection to hostName: records the history entry,
+// shows the "connecting" spinner and runs a quick reachability check so
+// failures surface promptly instead of hanging with no feedback.
+func (m Model) startConnect(hostName string) (Model, tea.Cmd) {
 	if m.historyManager != nil {
-		err := m.historyManager.RecordConnection(hostName)
-		if err != nil {
+		if err := m.historyManager.RecordConnection(hostName); err != nil {
 			// Log the error but don't prevent the connection
 			fmt.Printf("Warning: Could not record connection history: %v\n", err)
 		}
 	}
+	m.connectingHost = hostName
+	return m, tea.Batch(m.preflightAndConnect(hostName), m.spinnerCmd())
+}
 
+// findHost returns the parsed host entry matching the given table name
+func (m Model) findHost(hostName string) (config.SSHHost, bool) {
+	for _, host := range m.hosts {
+		if host.Name == hostName {
+			return host, true
+		}
+	}
+	return config.SSHHost{}, false
+}
+
+// preflightAndConnect checks that the host is reachable (TCP) before handing
+// the terminal to the real ssh process. Jump/proxy hosts are skipped since they
+// cannot be reached with a plain TCP dial.
+func (m Model) preflightAndConnect(hostName string) tea.Cmd {
+	host, ok := m.findHost(hostName)
+	if !ok || host.ProxyJump != "" || host.ProxyCommand != "" {
+		return m.connectDirect(hostName)
+	}
+
+	hostname := host.Hostname
+	if hostname == "" {
+		hostname = host.Name
+	}
+	port := host.Port
+	if port == "" {
+		port = "22"
+	}
+
+	return func() tea.Msg {
+		conn, err := net.DialTimeout("tcp", net.JoinHostPort(hostname, port), 5*time.Second)
+		if err != nil {
+			return connectPreflightMsg{hostName: hostName, err: err}
+		}
+		conn.Close()
+		return connectPreflightMsg{hostName: hostName}
+	}
+}
+
+// connectDirect spawns the interactive ssh process for hostName
+func (m Model) connectDirect(hostName string) tea.Cmd {
 	// Build the SSH command with the appropriate config file
 	var sshCmd *exec.Cmd
 	if m.configFile != "" {
-		sshCmd = exec.Command("ssh", "-F", m.configFile, hostName)
+		sshCmd = sshCommand([]string{"-F", m.configFile, hostName})
 	} else {
-		sshCmd = exec.Command("ssh", hostName)
+		sshCmd = sshCommand([]string{hostName})
 	}
+	return runSSHProcess(sshCmd, hostName)
+}
 
-	return tea.ExecProcess(sshCmd, func(err error) tea.Msg {
-		return tea.Quit()
+// spinnerCmd ticks to animate the connecting indicator
+func (m Model) spinnerCmd() tea.Cmd {
+	return tea.Tick(120*time.Millisecond, func(time.Time) tea.Msg {
+		return spinnerTickMsg{}
 	})
 }
