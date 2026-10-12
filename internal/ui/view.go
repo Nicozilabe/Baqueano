@@ -86,6 +86,18 @@ func (m Model) renderListView() string {
 		components = append(components, errorStyle.Render("❌ "+m.errorMessage))
 	}
 
+	// Add the connecting indicator while a connection attempt is in progress
+	if m.connectingHost != "" {
+		frames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+		spinner := frames[m.spinnerFrame%len(frames)]
+		connectStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("13")).
+			Bold(true).
+			Padding(0, 1)
+
+		components = append(components, connectStyle.Render(spinner+" Connecting to "+m.connectingHost+"…"))
+	}
+
 	// Add indicator when hidden hosts are shown
 	if m.showHidden {
 		hiddenBannerStyle := lipgloss.NewStyle().

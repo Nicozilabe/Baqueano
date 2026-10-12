@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -13,6 +16,36 @@ import (
 
 	"golang.org/x/crypto/ssh"
 )
+
+// FindSSHExecutable locates the ssh client binary. PATH resolution wins when
+// possible. On Windows, OpenSSH ships in %SystemRoot%\System32\OpenSSH, which
+// is invisible to 32-bit builds because of filesystem redirection to SysWOW64;
+// the Sysnative alias bypasses that redirection.
+func FindSSHExecutable() (string, error) {
+	if sshPath, err := exec.LookPath("ssh"); err == nil {
+		return sshPath, nil
+	}
+
+	if runtime.GOOS == "windows" {
+		systemRoot := os.Getenv("SystemRoot")
+		if systemRoot == "" {
+			systemRoot = os.Getenv("windir")
+		}
+		if systemRoot != "" {
+			var candidates = []string{
+				filepath.Join(systemRoot, "Sysnative", "OpenSSH", "ssh.exe"),
+				filepath.Join(systemRoot, "System32", "OpenSSH", "ssh.exe"),
+			}
+			for _, candidate := range candidates {
+				if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+					return candidate, nil
+				}
+			}
+		}
+	}
+
+	return "", exec.ErrNotFound
+}
 
 // PingStatus represents the connectivity status of an SSH host
 type PingStatus int
