@@ -43,7 +43,8 @@ func TestEditFormKeepsSetEnv_AC4(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ssh rejects the saved config: %v\n%s", err, out)
 	}
-	if !strings.Contains(string(out), "\nsetenv TERM=xterm-256color\n") {
+	// OpenSSH on Windows ends lines with CRLF; normalize before comparing.
+	if !strings.Contains(strings.ReplaceAll(string(out), "\r", ""), "\nsetenv TERM=xterm-256color\n") {
 		t.Errorf("ssh -G does not read setenv TERM=xterm-256color:\n%s", out)
 	}
 }
