@@ -34,7 +34,9 @@ func TestGetDefaultSSHConfigPath(t *testing.T) {
 				t.Fatalf("GetDefaultSSHConfigPath() error = %v", err)
 			}
 
-			if !strings.HasSuffix(configPath, tt.expected) {
+			// Build the expected suffix with the current OS separator so the
+			// check also works on Windows (backslash separators).
+			if !strings.HasSuffix(configPath, filepath.Join(".ssh", "config")) {
 				t.Errorf("Expected path to end with %q, got %q", tt.expected, configPath)
 			}
 
