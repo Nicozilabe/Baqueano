@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/Gu1llaum-3/sshm/internal/config"
+	"github.com/Gu1llaum-3/sshm/internal/connectivity"
 	"github.com/Gu1llaum-3/sshm/internal/history"
 	"github.com/Gu1llaum-3/sshm/internal/ui"
 
@@ -207,7 +208,11 @@ func connectToHost(hostName string, remoteCommand []string) {
 	}
 
 	// Fallback for Windows or if LookPath failed
-	sshCmd := exec.Command("ssh", args...)
+	sshPath, findErr := connectivity.FindSSHExecutable()
+	if findErr != nil {
+		sshPath = "ssh"
+	}
+	sshCmd := exec.Command(sshPath, args...)
 	sshCmd.Stdin = os.Stdin
 	sshCmd.Stdout = os.Stdout
 	sshCmd.Stderr = os.Stderr
