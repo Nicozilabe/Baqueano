@@ -83,18 +83,11 @@ func TestWrittenValuesAreReadBackUnchanged_AC8(t *testing.T) {
 
 // AC-8: a value written by sshm is read back unchanged by the ssh client
 func TestWrittenValuesAreReadBackBySSHClient_AC8(t *testing.T) {
-	sshPath, err := exec.LookPath("ssh")
-	if err != nil {
-		t.Skip("ssh client not installed")
-	}
 	for _, field := range writtenFields {
 		for _, tt := range trickyValues {
 			t.Run(field.name+"/"+tt.name, func(t *testing.T) {
 				configFile := writeTrickyHost(t, field.set, tt.value)
-				out, err := exec.Command(sshPath, "-F", configFile, "-G", "h").CombinedOutput()
-				if err != nil {
-					t.Fatalf("ssh -G failed: %v\n%s", err, out)
-				}
+				out := sshG(t, configFile, "h")
 				var values []string
 				for _, line := range strings.Split(string(out), "\n") {
 					if strings.HasPrefix(line, field.sshKey+" ") {
@@ -144,10 +137,7 @@ func TestProxyJumpIsKeptRaw_AC8(t *testing.T) {
 			if out, err := exec.Command(sshPath, "-F", handWritten, "-G", "h").CombinedOutput(); err != nil {
 				t.Skipf("this ssh rejects ProxyJump %s written by hand: %s", value, out)
 			}
-			out, err := exec.Command(sshPath, "-F", configFile, "-G", "h").CombinedOutput()
-			if err != nil {
-				t.Fatalf("ssh -G failed: %v\n%s", err, out)
-			}
+			out := sshG(t, configFile, "h")
 			if !strings.Contains(string(out), "\nproxyjump "+value+"\n") {
 				t.Errorf("ssh -G does not read proxyjump %q:\n%s", value, out)
 			}
