@@ -38,11 +38,16 @@ func parseVersion(version string) []int {
 
 	for i, part := range parts {
 		// Remove any non-numeric suffixes (e.g., "1-beta", "2-rc1")
-		numPart := strings.FieldsFunc(part, func(r rune) bool {
+		fields := strings.FieldsFunc(part, func(r rune) bool {
 			return r == '-' || r == '+' || r == '_'
-		})[0]
+		})
+		// A component made only of separators (e.g. "1..2") has no fields,
+		// so leave it at zero instead of indexing an empty slice.
+		if len(fields) == 0 {
+			continue
+		}
 
-		if num, err := strconv.Atoi(numPart); err == nil {
+		if num, err := strconv.Atoi(fields[0]); err == nil {
 			nums[i] = num
 		}
 	}
