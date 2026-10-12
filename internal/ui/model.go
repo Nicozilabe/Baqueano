@@ -108,6 +108,10 @@ type Model struct {
 	// Error handling
 	errorMessage string
 	showingError bool
+
+	// Connection attempt state
+	connectingHost string
+	spinnerFrame   int
 }
 
 // applyVisibilityFilter returns hosts filtered according to the showHidden flag.
