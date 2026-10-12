@@ -2,7 +2,6 @@ package config
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -115,10 +114,6 @@ func TestSplitConfigLineIsLenient_AC4(t *testing.T) {
 
 // The tokenizer reads IdentityFile values exactly like the installed ssh client.
 func TestSplitConfigLineMatchesSSHClient(t *testing.T) {
-	sshPath, err := exec.LookPath("ssh")
-	if err != nil {
-		t.Skip("ssh client not installed")
-	}
 	for _, tt := range tokenizerCases {
 		if !strings.HasPrefix(tt.line, "IdentityFile") {
 			continue
@@ -128,10 +123,7 @@ func TestSplitConfigLineMatchesSSHClient(t *testing.T) {
 			if err := os.WriteFile(configFile, []byte("Host h\n  "+tt.line+"\n"), 0600); err != nil {
 				t.Fatal(err)
 			}
-			out, err := exec.Command(sshPath, "-F", configFile, "-G", "h").Output()
-			if err != nil {
-				t.Fatalf("ssh -G failed: %v", err)
-			}
+			out := sshG(t, configFile, "h")
 			var fromSSH []string
 			for _, l := range strings.Split(string(out), "\n") {
 				if strings.HasPrefix(l, "identityfile ") {
