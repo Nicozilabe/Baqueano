@@ -202,6 +202,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.showingError = true
 			m.errorMessage = fmt.Sprintf("Connection failed with %s: %s\n\nPress ENTER, ESC or SPACE to continue",
 				msg.host, details)
+			// Port-forward sessions run from other views; go back to the list
+			// so the banner is visible and dismissible with the list keys.
+			m.viewMode = ViewList
+			m.portForwardForm = nil
+			m.table.Focus()
 			return m, nil
 		}
 		return m, tea.Quit
