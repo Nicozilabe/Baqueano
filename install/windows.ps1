@@ -96,6 +96,37 @@ if ($LocalBinary -ne "") {
         exit 1
     }
 
+    # Verify the downloaded archive against the published checksums
+    $checksumUrl = "https://github.com/Gu1llaum-3/sshm/releases/download/$latestVersion/checksums.txt"
+    $checksumFile = "$env:TEMP\sshm-checksums.txt"
+
+    Write-Info "Verifying checksum..."
+    try {
+        Invoke-WebRequest -Uri $checksumUrl -OutFile $checksumFile
+    } catch {
+        Write-Error "Failed to download checksums"
+        exit 1
+    }
+
+    $expected = (Get-Content $checksumFile |
+        Where-Object { $_ -match "\s$([regex]::Escape($fileName))$" } |
+        ForEach-Object { ($_ -split '\s+')[0] } |
+        Select-Object -First 1)
+
+    if (-not $expected) {
+        Write-Error "No checksum found for $fileName"
+        exit 1
+    }
+
+    $actual = (Get-FileHash -Path $tempFile -Algorithm SHA256).Hash
+    if ($actual -ne $expected.ToUpper()) {
+        Write-Error "Checksum verification failed for $fileName"
+        Write-Error "Expected: $expected"
+        Write-Error "Actual:   $actual"
+        exit 1
+    }
+    Write-Info "Checksum verified for $fileName"
+
     # Create installation directory
     if (-not (Test-Path $InstallDir)) {
         New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
@@ -117,6 +148,7 @@ if ($LocalBinary -ne "") {
 
     # Clean up
     Remove-Item $tempFile -Force
+    Remove-Item $checksumFile -Force -ErrorAction SilentlyContinue
 }
 
 # Check PATH

@@ -8,6 +8,7 @@ OS=""
 ARCH=""
 FORCE_INSTALL="${FORCE_INSTALL:-false}"
 SSHM_VERSION="${SSHM_VERSION:-latest}"
+CHECKSUM_FILE="sshm-checksums.txt"
 
 RED='\033[0;31m'
 PURPLE='\033[0;35m'
@@ -79,6 +80,55 @@ getLatestVersion() {
     printf "${GREEN}Installing version: $LATEST_VERSION${NC}\n"
 }
 
+downloadChecksums() {
+    CHECKSUM_URL="https://github.com/Gu1llaum-3/sshm/releases/download/$LATEST_VERSION/checksums.txt"
+    printf "${YELLOW}Downloading checksums...${NC}\n"
+    if ! curl -fsSL "$CHECKSUM_URL" --output "$CHECKSUM_FILE"; then
+        printf "${RED}Failed to download checksums from $CHECKSUM_URL${NC}\n"
+        exit 1
+    fi
+}
+
+# sha256Of prints the SHA-256 of the given file using whatever tool is available
+sha256Of() {
+    local file="$1"
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$file" | awk '{print $1}'
+    elif command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$file" | awk '{print $1}'
+    elif command -v openssl >/dev/null 2>&1; then
+        openssl dgst -sha256 "$file" | awk '{print $NF}'
+    else
+        printf "${RED}No SHA-256 tool found (sha256sum, shasum or openssl required)${NC}\n" >&2
+        return 1
+    fi
+}
+
+verifyChecksum() {
+    local archive="$1"
+
+    # checksums.txt lines are "<sha256>  <filename>"
+    local expected
+    expected=$(awk -v f="$GITHUB_FILE" '$2 == f { print $1; exit }' "$CHECKSUM_FILE")
+    if [ -z "$expected" ]; then
+        printf "${RED}No checksum found for $GITHUB_FILE${NC}\n"
+        exit 1
+    fi
+
+    local actual
+    if ! actual=$(sha256Of "$archive"); then
+        exit 1
+    fi
+
+    if [ "$expected" != "$actual" ]; then
+        printf "${RED}Checksum verification failed for $GITHUB_FILE${NC}\n"
+        printf "${RED}Expected: $expected${NC}\n"
+        printf "${RED}Actual:   $actual${NC}\n"
+        exit 1
+    fi
+    printf "${GREEN}Checksum verified for $GITHUB_FILE${NC}\n"
+}
+
 downloadBinary() {
     # Map OS names to match GoReleaser format
     local GORELEASER_OS="$OS"
@@ -109,6 +159,9 @@ downloadBinary() {
         printf "${RED}Failed to download binary${NC}\n"
         exit 1
     fi
+    
+    # Verify the downloaded archive against the published checksums
+    verifyChecksum "sshm-tmp.tar.gz"
     
     # Extract the binary
     tar -xzf "sshm-tmp.tar.gz"
@@ -175,7 +228,7 @@ install() {
 }
 
 cleanup() {
-    rm -f "sshm-tmp" "sshm-tmp.tar.gz" "sshm-${OS}-${ARCH}"
+    rm -f "sshm-tmp" "sshm-tmp.tar.gz" "sshm-${OS}-${ARCH}" "$CHECKSUM_FILE"
 }
 
 checkExisting() {
@@ -230,6 +283,7 @@ main() {
     checkExisting
     
     # Download and install
+    downloadChecksums
     downloadBinary
     install
     cleanup

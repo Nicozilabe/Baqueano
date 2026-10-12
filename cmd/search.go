@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -199,42 +200,43 @@ func outputSimple(hosts []config.SSHHost) {
 
 // outputJSON displays results in JSON format
 func outputJSON(hosts []config.SSHHost) {
-	fmt.Println("[")
-	for i, host := range hosts {
-		fmt.Printf("  {\n")
-		fmt.Printf("    \"name\": \"%s\",\n", escapeJSON(host.Name))
-		fmt.Printf("    \"hostname\": \"%s\",\n", escapeJSON(host.Hostname))
-		fmt.Printf("    \"user\": \"%s\",\n", escapeJSON(host.User))
-		fmt.Printf("    \"port\": \"%s\",\n", escapeJSON(host.Port))
-		fmt.Printf("    \"identity\": \"%s\",\n", escapeJSON(host.Identity))
-		fmt.Printf("    \"proxy_jump\": \"%s\",\n", escapeJSON(host.ProxyJump))
-		fmt.Printf("    \"proxy_command\": \"%s\",\n", escapeJSON(host.ProxyCommand))
-		fmt.Printf("    \"options\": \"%s\",\n", escapeJSON(host.Options))
-		fmt.Printf("    \"tags\": [")
-		for j, tag := range host.Tags {
-			fmt.Printf("\"%s\"", escapeJSON(tag))
-			if j < len(host.Tags)-1 {
-				fmt.Printf(", ")
-			}
-		}
-		fmt.Printf("]\n")
-		if i < len(hosts)-1 {
-			fmt.Printf("  },\n")
-		} else {
-			fmt.Printf("  }\n")
-		}
+	type jsonHost struct {
+		Name         string   `json:"name"`
+		Hostname     string   `json:"hostname"`
+		User         string   `json:"user"`
+		Port         string   `json:"port"`
+		Identity     string   `json:"identity"`
+		ProxyJump    string   `json:"proxy_jump"`
+		ProxyCommand string   `json:"proxy_command"`
+		Options      string   `json:"options"`
+		Tags         []string `json:"tags"`
 	}
-	fmt.Println("]")
-}
 
-// escapeJSON escapes special characters for JSON output
-func escapeJSON(s string) string {
-	s = strings.ReplaceAll(s, "\\", "\\\\")
-	s = strings.ReplaceAll(s, "\"", "\\\"")
-	s = strings.ReplaceAll(s, "\n", "\\n")
-	s = strings.ReplaceAll(s, "\r", "\\r")
-	s = strings.ReplaceAll(s, "\t", "\\t")
-	return s
+	out := make([]jsonHost, 0, len(hosts))
+	for _, host := range hosts {
+		tags := host.Tags
+		if tags == nil {
+			tags = []string{}
+		}
+		out = append(out, jsonHost{
+			Name:         host.Name,
+			Hostname:     host.Hostname,
+			User:         host.User,
+			Port:         host.Port,
+			Identity:     host.Identity,
+			ProxyJump:    host.ProxyJump,
+			ProxyCommand: host.ProxyCommand,
+			Options:      host.Options,
+			Tags:         tags,
+		})
+	}
+
+	b, err := json.MarshalIndent(out, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error encoding JSON: %v\n", err)
+		return
+	}
+	fmt.Println(string(b))
 }
 
 func init() {

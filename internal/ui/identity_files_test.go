@@ -43,6 +43,9 @@ func TestEditFormKeepsExtraIdentities_AC6(t *testing.T) {
 	// the form only accepts a main key that exists on disk
 	home := t.TempDir()
 	t.Setenv("HOME", home)
+	// os.UserHomeDir() reads %USERPROFILE% on Windows, so tilde expansion
+	// only points at the temp dir if it is set there too.
+	t.Setenv("USERPROFILE", home)
 	if err := os.MkdirAll(filepath.Join(home, ".ssh"), 0700); err != nil {
 		t.Fatal(err)
 	}

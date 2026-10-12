@@ -91,6 +91,9 @@ func withHistory(t *testing.T, m Model) Model {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
+	// GetSSHMConfigDir() reads %APPDATA% on Windows; isolate it so the test
+	// never reads or writes the real user history file.
+	t.Setenv("APPDATA", filepath.Join(home, "AppData", "Roaming"))
 	historyManager, err := history.NewHistoryManager()
 	if err != nil {
 		t.Fatalf("NewHistoryManager() error = %v", err)

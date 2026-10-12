@@ -511,14 +511,14 @@ func hasNonSSHContent(filePath string) bool {
 
 	content := strings.ToLower(string(buffer[:n]))
 
-	// Check for common non-SSH file indicators
+	// Check for common non-SSH file indicators (compared against lowercased content)
 	nonSSHIndicators := []string{
 		"<!doctype", "<html>", "<xml>", "<?xml",
 		"#!/bin/", "#!/usr/bin/",
 		"# readme", "# documentation", "# license",
 		"package main", "function ", "class ", "def ",
 		"import ", "require ", "#include",
-		"SELECT ", "INSERT ", "UPDATE ", "DELETE ",
+		"select ", "insert ", "update ", "delete ",
 	}
 
 	for _, indicator := range nonSSHIndicators {
