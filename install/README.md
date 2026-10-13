@@ -82,8 +82,51 @@ chmod +x unix.sh
 
 ## Uninstall
 
-To uninstall SSHM:
+### Unix/Linux/macOS
 
 ```bash
+curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix-uninstall.sh | bash
+```
+
+**Uninstall options:**
+
+```bash
+# Remove the binary and the config directory (history, backups, credentials)
+PURGE_CONFIG=true bash -c "$(curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix-uninstall.sh)"
+
+# Skip confirmation prompts
+FORCE_UNINSTALL=true bash -c "$(curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix-uninstall.sh)"
+
+# Custom install directory
+INSTALL_DIR=/opt/bin bash -c "$(curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix-uninstall.sh)"
+```
+
+### Windows
+
+```powershell
+irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1 | iex
+```
+
+**Uninstall options:**
+
+```powershell
+# Remove the binary and the config directory
+iex "& { $(irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1) } -Purge"
+
+# Skip confirmation prompts
+iex "& { $(irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1) } -Force"
+```
+
+### Manual Uninstall
+
+If you configured a custom `INSTALL_DIR`, point the uninstaller at it with
+`INSTALL_DIR=/opt/bin` (Unix) or `-InstallDir 'C:\tools'` (Windows). You can
+also remove it manually:
+
+```bash
+# Unix/Linux/macOS
 sudo rm /usr/local/bin/sshm
+
+# Windows (PowerShell)
+Remove-Item "$env:LOCALAPPDATA\sshm\sshm.exe"
 ```
