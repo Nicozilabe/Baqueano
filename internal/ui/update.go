@@ -13,26 +13,18 @@ import (
 
 	"github.com/Nicozilabe/sshm/internal/config"
 	"github.com/Nicozilabe/sshm/internal/connectivity"
-	"github.com/Nicozilabe/sshm/internal/drive"
 	"github.com/Nicozilabe/sshm/internal/version"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-// Messages for SSH ping functionality, version checking and drive sync
+// Messages for SSH ping functionality and version checking
 type (
 	pingResultMsg   *connectivity.HostPingResult
 	versionCheckMsg *version.UpdateInfo
 	versionErrorMsg error
 	errorMsg        string
-	driveSyncMsg    struct {
-		result *drive.Result
-		err    error
-	}
-	driveLoginMsg struct {
-		err error
-	}
 )
 
 // execFinishedMsg reports how an interactive ssh process ended
@@ -178,36 +170,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.updateTableRows()
 		}
 		return m, nil
-
-	case driveSyncMsg:
-		if msg.err != nil {
-			m.errorMessage = msg.err.Error()
-			m.showingError = true
-			return m, nil
-		}
-		m.showingError = false
-		if msg.result != nil {
-			m.errorMessage = fmt.Sprintf("Drive sync: %d local, %d remote - %d added, %d conflicts (local kept)",
-				msg.result.Stats.Local, msg.result.Stats.Remote, msg.result.Stats.Added, msg.result.Stats.Conflict)
-			m.showingError = true
-		}
-		return m, func() tea.Msg {
-			time.Sleep(3 * time.Second)
-			return errorMsg("clear")
-		}
-
-	case driveLoginMsg:
-		if msg.err != nil {
-			m.errorMessage = msg.err.Error()
-			m.showingError = true
-			return m, nil
-		}
-		m.errorMessage = "Google Drive login successful"
-		m.showingError = true
-		return m, func() tea.Msg {
-			time.Sleep(2 * time.Second)
-			return errorMsg("clear")
-		}
 
 	case versionCheckMsg:
 		// Handle version check result
@@ -857,14 +819,6 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			}
 			m.updateTableRows()
 			return m, nil
-		}
-	case "l":
-		if !m.searchMode && !m.deleteMode {
-			return m, m.startDriveLoginCmd()
-		}
-	case "o":
-		if !m.searchMode && !m.deleteMode {
-			return m, m.startDriveSyncCmd()
 		}
 	}
 
