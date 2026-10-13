@@ -4,27 +4,27 @@ import "github.com/charmbracelet/lipgloss"
 
 // Theme colors - aligned with the project website palette (docs/styles.css)
 var (
-	// Primary interface color - website accent (green)
-	PrimaryColor = "#4ade80" // flag: --accent
+	// Primary interface color - website accent (rust/terracotta)
+	PrimaryColor = "#B9542A" // flag: --accent
 	// PrimaryDimColor is the darker accent, used for borders and hover states
-	PrimaryDimColor = "#22c55e" // flag: --accent-dim
+	PrimaryDimColor = "#9A4423" // flag: --accent-dim
 
 	// Link / highlight color
-	LinkColor = "#7dd3fc" // flag: --link
+	LinkColor = "#E0A56B" // flag: --link
 
 	// Foreground colors
-	TextColor    = "#e6edf3" // flag: --text
-	TextDimColor = "#9fb0c0" // flag: --text-dim
+	TextColor    = "#F1EBE1" // flag: --text
+	TextDimColor = "#A79D8E" // flag: --text-dim
 
 	// Surface and border colors
-	SurfaceColor  = "#111823" // flag: --bg-soft
-	ElevatedColor = "#161f2c" // flag: --bg-elev
-	BorderColor   = "#232f3f" // flag: --border
+	SurfaceColor  = "#12151B" // flag: --bg-soft
+	ElevatedColor = "#171B22" // flag: --bg-elev
+	BorderColor   = "#2A3038" // flag: --border
 
 	// Semantic colors
-	SecondaryColor = TextDimColor // Gray (dim text)
-	ErrorColor     = "#f87171"    // Red
-	SuccessColor   = PrimaryColor // Green
+	SecondaryColor = TextDimColor // Warm gray (dim text)
+	ErrorColor     = "#E0564B"    // Warm red
+	SuccessColor   = PrimaryColor // Rust accent
 )
 
 // Styles struct centralizes all lipgloss styles
@@ -95,7 +95,7 @@ func NewStyles(width int) Styles {
 
 		// Style for selected items
 		Selected: lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#0b0f14")).
+			Foreground(lipgloss.Color(TextColor)).
 			Background(lipgloss.Color(PrimaryColor)).
 			Bold(false),
 
@@ -119,7 +119,7 @@ func NewStyles(width int) Styles {
 
 		// Form styles
 		FormTitle: lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#0b0f14")).
+			Foreground(lipgloss.Color(TextColor)).
 			Background(lipgloss.Color(PrimaryColor)).
 			Padding(0, 1),
 
@@ -147,8 +147,9 @@ func NewStyles(width int) Styles {
 
 // Application ASCII title
 const asciiTitle = `
- _____ _____ __ __ _____
-|   __|   __|  |  |     |
-|__   |__   |     | | | |
-|_____|_____|__|__|_|_|_|
+ ____       _        ___     _   _    _____       _       _   _     ___
+| __ )     / \      / _ \   | | | |  | ____|     / \     | \ | |   / _ \
+|  _ \    / _ \    | | | |  | | | |  |  _|      / _ \    |  \| |  | | | |
+| |_) |   / ___ \   | |_| |  | |_| |  | |___    / ___ \   | |\  |  | |_| |
+|____/   /_/   \_\   \__\_\   \___/   |_____|  /_/   \_\  |_| \_|   \___/
 `
