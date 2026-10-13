@@ -87,6 +87,23 @@ Expand-Archive sshm_Windows_x86_64.zip -DestinationPath C:\tools\
 # Add C:\tools to your PATH environment variable
 ```
 
+### Uninstalling
+
+Removing SSHM is just as easy as installing it.
+
+**Unix/Linux/macOS:**
+```bash
+curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix-uninstall.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1 | iex
+```
+
+> By default your configuration (history, backups, saved credentials) is kept.
+> Add `PURGE_CONFIG=true` (Unix) or `-Purge` (Windows) to remove it too.
+
 ## Usage
 
 ### Interactive Mode
@@ -866,8 +883,11 @@ sshm/
 │   ├── logo.png        # Project logo
 │   └── sshm.gif        # Demo animation
 ├── install/            # Installation scripts
-│   ├── unix.sh         # Unix/Linux/macOS installer
-│   └── README.md       # Installation guide
+│   ├── unix.sh              # Unix/Linux/macOS installer
+│   ├── windows.ps1          # Windows installer
+│   ├── unix-uninstall.sh    # Unix/Linux/macOS uninstaller
+│   ├── windows-uninstall.ps1# Windows uninstaller
+│   └── README.md            # Installation guide
 ├── .github/            # GitHub configuration
 │   ├── copilot-instructions.md # Development guidelines
 │   └── workflows/      # CI/CD pipelines
