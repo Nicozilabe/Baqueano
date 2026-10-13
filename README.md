@@ -443,6 +443,51 @@ sshm edit hostname -c /path/to/custom/ssh_config
 sshm move hostname -c /path/to/custom/ssh_config
 ```
 
+### Google Drive Sync (experimental)
+
+Keep the same SSH host list on several machines by storing it in your Google
+Drive. Hosts live in a hidden **appDataFolder** that only sshm can see, so they
+never mix with your regular Drive files. Only the SSH config document is
+synced: **private keys are never uploaded**.
+
+**One-time setup**
+
+1. In Google Cloud Console, create an OAuth client of type **Desktop app**.
+2. Authorize once:
+   ```bash
+   sshm drive login
+   ```
+   `sshm drive login` asks for the **Client ID** and **Client Secret** in the
+   terminal (the secret is hidden) and saves them to
+   `<config-dir>/drive_client.json` for later commands, then opens the browser
+   to finish authorization.
+
+   If you prefer, you can provide the credentials up front instead of being
+   prompted, either as environment variables:
+   ```bash
+   export SSHM_GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
+   export SSHM_GOOGLE_CLIENT_SECRET=xxxxxxxx
+   ```
+   or in `<config-dir>/drive_client.json`:
+   ```json
+   { "client_id": "...", "client_secret": "..." }
+   ```
+   (`<config-dir>` is `%APPDATA%\sshm` on Windows, `~/.config/sshm` elsewhere.)
+   Non-interactive alternative: `sshm drive login --client-id ID --client-secret SECRET`.
+
+**Everyday use**
+
+```bash
+sshm drive sync          # merge local + remote (local wins), upload the result
+sshm drive sync --dry-run # show what would change, write nothing
+sshm drive pull          # overwrite local with the remote copy (no merge)
+sshm drive push          # overwrite the remote with the local copy (no merge)
+```
+
+`sync` writes a backup of the current local config to the sshm backup
+directory before overwriting it. Remote-only hosts are appended; if a host
+exists on both sides the local definition is kept.
+
 ### Advanced Features
 
 #### Host Movement Between Config Files
