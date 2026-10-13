@@ -32,9 +32,9 @@ builds:
   - CGO_ENABLED=0
   ldflags:
   - -s -w
-  - -X github.com/Gu1llaum-3/sshm/cmd.AppVersion={{.Version}}
-  - -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID={{.Env.SSHM_GOOGLE_CLIENT_ID}}
-  - -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientSecret={{.Env.SSHM_GOOGLE_CLIENT_SECRET}}
+  - -X github.com/Nicozilabe/sshm/cmd.AppVersion={{.Version}}
+  - -X github.com/Nicozilabe/sshm/internal/drive.builtinClientID={{.Env.SSHM_GOOGLE_CLIENT_ID}}
+  - -X github.com/Nicozilabe/sshm/internal/drive.builtinClientSecret={{.Env.SSHM_GOOGLE_CLIENT_SECRET}}
   flags:
   - -trimpath
 
@@ -77,30 +77,10 @@ changelog:
   - title: Others
     order: 999
 
-# Homebrew tap configuration (Formula pour CLI)
-brews:
-- name: sshm
-  repository:
-    owner: Gu1llaum-3
-    name: homebrew-sshm
-    # Token with repo permissions for your homebrew-sshm repo
-    token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-  commit_author:
-    name: goreleaserbot
-    email: bot@goreleaser.com
-  commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-  homepage: "https://github.com/Gu1llaum-3/sshm"
-  description: "A modern SSH connection manager for your terminal"
-  license: MIT
-  skip_upload: auto
-  # Test command to verify installation
-  test: |
-    system "#{bin}/sshm --version"
-
 # Release configuration
 release:
   github:
-    owner: Gu1llaum-3
+    owner: Nicozilabe
     name: sshm
   prerelease: auto
   draft: false
@@ -115,21 +95,15 @@ release:
   footer: |
     ## Installation
 
-    ### Homebrew (macOS/Linux)
-    ```bash
-    brew tap Gu1llaum-3/sshm
-    brew install sshm
-    ```
-
     ### Installation Script (Recommended)
     **Unix/Linux/macOS:**
     ```bash
-    curl -sSL https://github.com/Gu1llaum-3/sshm/raw/main/install/unix.sh | bash
+    curl -sSL https://github.com/Nicozilabe/sshm/raw/main/install/unix.sh | bash
     ```
 
     **Windows (PowerShell):**
     ```powershell
-    iwr -useb https://github.com/Gu1llaum-3/sshm/raw/main/install/windows.ps1 | iex
+    iwr -useb https://github.com/Nicozilabe/sshm/raw/main/install/windows.ps1 | iex
     ```
 
     ### Manual Installation
@@ -137,13 +111,13 @@ release:
 
     ## Full Changelog
 
-    See all changes at https://github.com/Gu1llaum-3/sshm/compare/{{.PreviousTag}}...{{.Tag}}
+    See all changes at https://github.com/Nicozilabe/sshm/compare/{{.PreviousTag}}...{{.Tag}}
 
     ---
 
-    📖 **Documentation:** See the updated [README](https://github.com/Gu1llaum-3/sshm/blob/main/README.md)
+    📖 **Documentation:** See the updated [README](https://github.com/Nicozilabe/sshm/blob/main/README.md)
 
-    🐛 **Issues:** Found a bug? Open an [issue](https://github.com/Gu1llaum-3/sshm/issues)
+    🐛 **Issues:** Found a bug? Open an [issue](https://github.com/Nicozilabe/sshm/issues)
 
     ---
 
