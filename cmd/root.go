@@ -8,10 +8,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/Gu1llaum-3/sshm/internal/config"
-	"github.com/Gu1llaum-3/sshm/internal/connectivity"
-	"github.com/Gu1llaum-3/sshm/internal/history"
-	"github.com/Gu1llaum-3/sshm/internal/ui"
+	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/sshm/internal/connectivity"
+	"github.com/Nicozilabe/sshm/internal/history"
+	"github.com/Nicozilabe/sshm/internal/ui"
 
 	"github.com/spf13/cobra"
 )

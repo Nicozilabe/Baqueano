@@ -20,12 +20,12 @@ if (Test-Path $envFile) {
 }
 
 $version = "dev"
-$ldflags = "-s -w -X github.com/Gu1llaum-3/sshm/cmd.AppVersion=$version"
+$ldflags = "-s -w -X github.com/Nicozilabe/sshm/cmd.AppVersion=$version"
 if ($env:SSHM_GOOGLE_CLIENT_ID) {
-    $ldflags += " -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID=$($env:SSHM_GOOGLE_CLIENT_ID)"
+    $ldflags += " -X github.com/Nicozilabe/sshm/internal/drive.builtinClientID=$($env:SSHM_GOOGLE_CLIENT_ID)"
 }
 if ($env:SSHM_GOOGLE_CLIENT_SECRET) {
-    $ldflags += " -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientSecret=$($env:SSHM_GOOGLE_CLIENT_SECRET)"
+    $ldflags += " -X github.com/Nicozilabe/sshm/internal/drive.builtinClientSecret=$($env:SSHM_GOOGLE_CLIENT_SECRET)"
 }
 
 $outDir = Join-Path $root "dist"

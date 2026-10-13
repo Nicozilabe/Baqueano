@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Gu1llaum-3/sshm/internal/config"
+	"github.com/Nicozilabe/sshm/internal/config"
 
 	"golang.org/x/crypto/ssh"
 )

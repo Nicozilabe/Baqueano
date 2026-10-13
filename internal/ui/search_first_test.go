@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Gu1llaum-3/sshm/internal/config"
-	"github.com/Gu1llaum-3/sshm/internal/history"
+	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/sshm/internal/history"
 	tea "github.com/charmbracelet/bubbletea"
 )
 

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Gu1llaum-3/sshm/internal/drive"
+	"github.com/Nicozilabe/sshm/internal/drive"
 
 	"github.com/spf13/cobra"
 )

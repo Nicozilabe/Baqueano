@@ -13,12 +13,12 @@ if [ -f "$root/.env" ]; then
 fi
 
 version="dev"
-ldflags="-s -w -X github.com/Gu1llaum-3/sshm/cmd.AppVersion=$version"
+ldflags="-s -w -X github.com/Nicozilabe/sshm/cmd.AppVersion=$version"
 if [ -n "${SSHM_GOOGLE_CLIENT_ID:-}" ]; then
-	ldflags="$ldflags -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID=$SSHM_GOOGLE_CLIENT_ID"
+	ldflags="$ldflags -X github.com/Nicozilabe/sshm/internal/drive.builtinClientID=$SSHM_GOOGLE_CLIENT_ID"
 fi
 if [ -n "${SSHM_GOOGLE_CLIENT_SECRET:-}" ]; then
-	ldflags="$ldflags -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientSecret=$SSHM_GOOGLE_CLIENT_SECRET"
+	ldflags="$ldflags -X github.com/Nicozilabe/sshm/internal/drive.builtinClientSecret=$SSHM_GOOGLE_CLIENT_SECRET"
 fi
 
 mkdir -p "$root/dist"

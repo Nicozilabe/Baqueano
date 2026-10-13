@@ -1,6 +1,6 @@
 # SSHM Windows Installation Script
 # Usage: 
-#   Online:  irm https://raw.githubusercontent.com/Gu1llaum-3/sshm/main/install/windows.ps1 | iex
+#   Online:  irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows.ps1 | iex
 #   Local:   .\install\windows.ps1 -LocalBinary ".\sshm.exe"
 
 param(
@@ -71,7 +71,7 @@ if ($LocalBinary -ne "") {
     # Get latest version
     Write-Info "Fetching latest version..."
     try {
-        $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/Gu1llaum-3/sshm/releases/latest"
+        $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/Nicozilabe/sshm/releases/latest"
         $latestVersion = $latestRelease.tag_name
         Write-Info "Target version: $latestVersion"
     } catch {
@@ -85,7 +85,7 @@ if ($LocalBinary -ne "") {
     
     # GoReleaser format: sshm_Windows_x86_64.zip
     $fileName = "sshm_Windows_$goreleaserArch.zip"
-    $downloadUrl = "https://github.com/Gu1llaum-3/sshm/releases/download/$latestVersion/$fileName"
+    $downloadUrl = "https://github.com/Nicozilabe/sshm/releases/download/$latestVersion/$fileName"
     $tempFile = "$env:TEMP\$fileName"
 
     Write-Info "Downloading $fileName..."
@@ -97,7 +97,7 @@ if ($LocalBinary -ne "") {
     }
 
     # Verify the downloaded archive against the published checksums
-    $checksumUrl = "https://github.com/Gu1llaum-3/sshm/releases/download/$latestVersion/checksums.txt"
+    $checksumUrl = "https://github.com/Nicozilabe/sshm/releases/download/$latestVersion/checksums.txt"
     $checksumFile = "$env:TEMP\sshm-checksums.txt"
 
     Write-Info "Verifying checksum..."

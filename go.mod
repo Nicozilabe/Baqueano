@@ -1,4 +1,4 @@
-module github.com/Gu1llaum-3/sshm
+module github.com/Nicozilabe/sshm
 
 go 1.27.1
 

@@ -7,10 +7,10 @@ VERSION ?= dev
 -include .env
 
 # Google Drive OAuth client, embedded only when provided.
-GOOGLE_LDFLAGS := $(if $(SSHM_GOOGLE_CLIENT_ID),-X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID=$(SSHM_GOOGLE_CLIENT_ID)) $(if $(SSHM_GOOGLE_CLIENT_SECRET),-X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientSecret=$(SSHM_GOOGLE_CLIENT_SECRET))
+GOOGLE_LDFLAGS := $(if $(SSHM_GOOGLE_CLIENT_ID),-X github.com/Nicozilabe/sshm/internal/drive.builtinClientID=$(SSHM_GOOGLE_CLIENT_ID)) $(if $(SSHM_GOOGLE_CLIENT_SECRET),-X github.com/Nicozilabe/sshm/internal/drive.builtinClientSecret=$(SSHM_GOOGLE_CLIENT_SECRET))
 
 # Go build flags
-LDFLAGS := -s -w -X github.com/Gu1llaum-3/sshm/cmd.AppVersion=$(VERSION) $(GOOGLE_LDFLAGS)
+LDFLAGS := -s -w -X github.com/Nicozilabe/sshm/cmd.AppVersion=$(VERSION) $(GOOGLE_LDFLAGS)
 
 # Build with specific version
 build:
