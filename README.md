@@ -7,9 +7,9 @@
 # 🚀 SSHM - SSH Manager
 
 [![Go](https://img.shields.io/badge/Go-1.27+-00ADD8?style=for-the-badge&logo=go)](https://golang.org/)
-[![Release](https://img.shields.io/github/v/release/Gu1llaum-3/sshm?style=for-the-badge)](https://github.com/Gu1llaum-3/sshm/releases)
-[![License](https://img.shields.io/github/license/Gu1llaum-3/sshm?style=for-the-badge)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)](https://github.com/Gu1llaum-3/sshm/releases)
+[![Release](https://img.shields.io/github/v/release/Nicozilabe/sshm?style=for-the-badge)](https://github.com/Nicozilabe/sshm/releases)
+[![License](https://img.shields.io/github/license/Nicozilabe/sshm?style=for-the-badge)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)](https://github.com/Nicozilabe/sshm/releases)
 
 > **A modern, interactive SSH Manager for your terminal** 🔥
 
@@ -53,38 +53,33 @@ SSHM is a beautiful command-line tool that transforms how you manage and connect
 
 ### Installation
 
-**Homebrew (Recommended for macOS):**
-```bash
-brew install Gu1llaum-3/sshm/sshm
-```
-
 **Unix/Linux/macOS (One-line install):**
 ```bash
-curl -sSL https://raw.githubusercontent.com/Gu1llaum-3/sshm/main/install/unix.sh | bash
+curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/Gu1llaum-3/sshm/main/install/windows.ps1 | iex
+irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows.ps1 | iex
 ```
 
 **Alternative methods:**
 
 *Linux/macOS:*
 ```bash
-# Download specific release
-wget https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-linux-amd64.tar.gz
+# Download a specific release (asset shape: sshm_<OS>_<arch>.tar.gz)
+wget https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_x86_64.tar.gz
 
 # Extract and install
-tar -xzf sshm-linux-amd64.tar.gz
-sudo mv sshm-linux-amd64 /usr/local/bin/sshm
+tar -xzf sshm_Linux_x86_64.tar.gz
+sudo mv sshm /usr/local/bin/sshm
 ```
 
 *Windows:*
 ```powershell
 # Download and extract
-Invoke-WebRequest -Uri "https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-windows-amd64.zip" -OutFile "sshm-windows-amd64.zip"
-Expand-Archive sshm-windows-amd64.zip -DestinationPath C:\tools\
+Invoke-WebRequest -Uri "https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip" -OutFile "sshm_Windows_x86_64.zip"
+Expand-Archive sshm_Windows_x86_64.zip -DestinationPath C:\tools\
 # Add C:\tools to your PATH environment variable
 ```
 
@@ -796,7 +791,7 @@ If no configuration file exists, SSHM will automatically create one with default
 
 ```bash
 # Clone the repository
-git clone https://github.com/Gu1llaum-3/sshm.git
+git clone https://github.com/Nicozilabe/sshm.git
 cd sshm
 
 # Build the binary
@@ -893,12 +888,12 @@ Automated releases are built for multiple platforms:
 
 | Platform | Architecture | Download |
 |----------|-------------|----------|
-| Linux | AMD64 | [sshm-linux-amd64.tar.gz](https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-linux-amd64.tar.gz) |
-| Linux | ARM64 | [sshm-linux-arm64.tar.gz](https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-linux-arm64.tar.gz) |
-| macOS | Intel | [sshm-darwin-amd64.tar.gz](https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-darwin-amd64.tar.gz) |
-| macOS | Apple Silicon | [sshm-darwin-arm64.tar.gz](https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-darwin-arm64.tar.gz) |
-| Windows | AMD64 | [sshm-windows-amd64.zip](https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-windows-amd64.zip) |
-| Windows | ARM64 | [sshm-windows-arm64.zip](https://github.com/Gu1llaum-3/sshm/releases/latest/download/sshm-windows-arm64.zip) |
+| Linux | AMD64 | [sshm_Linux_x86_64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_x86_64.tar.gz) |
+| Linux | ARM64 | [sshm_Linux_arm64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_arm64.tar.gz) |
+| macOS | Intel | [sshm_Darwin_x86_64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_x86_64.tar.gz) |
+| macOS | Apple Silicon | [sshm_Darwin_arm64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_arm64.tar.gz) |
+| Windows | AMD64 | [sshm_Windows_x86_64.zip](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip) |
+| Windows | ARM64 | [sshm_Windows_arm64.zip](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_arm64.zip) |
 
 ## 🤝 Contributing
 
@@ -918,6 +913,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
+- [Guillaume Archambault (@Gu1llaum-3)](https://github.com/Gu1llaum-3) for the original [sshm](https://github.com/Gu1llaum-3/sshm) project this fork is based on
 - [Charm](https://charm.sh/) for the amazing TUI libraries
 - [Cobra](https://cobra.dev/) for the excellent CLI framework
 - [@yimeng](https://github.com/yimeng) for contributing SSH Include directive support
@@ -929,7 +925,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Made with ❤️ by [Guillaume](https://github.com/Gu1llaum-3)**
+**Fork maintained by [Nicozilabe](https://github.com/Nicozilabe) — originally created with ❤️ by [Guillaume (@Gu1llaum-3)](https://github.com/Gu1llaum-3)**
 
 ⭐ **Star this repo if you found it useful!** ⭐
 
