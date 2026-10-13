@@ -117,11 +117,15 @@ iex "& { $(irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/wi
 iex "& { $(irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1) } -Force"
 ```
 
+By default the uninstaller only removes the binary and keeps your configuration.
+Pass `PURGE_CONFIG=true` (Unix) or `-Purge` (Windows) to remove the config
+directory as well.
+
 ### Manual Uninstall
 
-If you configured a custom `INSTALL_DIR`, point the uninstaller at it with
-`INSTALL_DIR=/opt/bin` (Unix) or `-InstallDir 'C:\tools'` (Windows). You can
-also remove it manually:
+If you used a custom `INSTALL_DIR`, point the uninstaller at it with
+`INSTALL_DIR=/opt/bin` (Unix) or `-InstallDir 'C:\tools'` (Windows), or remove
+it manually:
 
 ```bash
 # Unix/Linux/macOS
