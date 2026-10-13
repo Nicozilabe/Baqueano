@@ -87,7 +87,7 @@ func compareVersions(v1, v2 string) int {
 	return 0
 }
 
-// CheckForUpdates checks GitHub for the latest release of sshm
+// CheckForUpdates checks GitHub for the latest release of baq
 func CheckForUpdates(ctx context.Context, currentVersion string) (*UpdateInfo, error) {
 	// Skip version check if current version is "dev"
 	if currentVersion == "dev" {
@@ -104,13 +104,13 @@ func CheckForUpdates(ctx context.Context, currentVersion string) (*UpdateInfo, e
 
 	// Create request with context
 	req, err := http.NewRequestWithContext(ctx, "GET",
-		"https://api.github.com/repos/Nicozilabe/sshm/releases/latest", nil)
+		"https://api.github.com/repos/Nicozilabe/baqueano/releases/latest", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	// Set user agent
-	req.Header.Set("User-Agent", "sshm/"+currentVersion)
+	req.Header.Set("User-Agent", "baq/"+currentVersion)
 
 	// Make the request
 	resp, err := client.Do(req)

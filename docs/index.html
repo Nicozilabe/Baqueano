@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SSHM — Interactive SSH Manager for your terminal</title>
-  <meta name="description" content="SSHM is a modern, interactive SSH manager for the terminal. Manage and connect to your SSH hosts with a beautiful TUI, including optional Google Drive sync of your host list.">
+  <title>Baqueano — Interactive SSH Manager for your terminal</title>
+  <meta name="description" content="Baqueano is a modern, interactive SSH manager for the terminal. Manage and connect to your SSH hosts with a beautiful TUI, including optional Google Drive sync of your host list.">
   <link rel="icon" href="logo.png">
   <link rel="stylesheet" href="styles.css">
-  <meta property="og:title" content="SSHM — Interactive SSH Manager">
+  <meta property="og:title" content="Baqueano — Interactive SSH Manager">
   <meta property="og:description" content="A modern, interactive SSH manager for your terminal, with optional Google Drive sync.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="logo.png">
@@ -16,14 +16,14 @@
   <header class="site-header">
     <nav class="nav">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="logo.png" alt="SSHM logo">
-        <span>SSHM</span>
+        <img class="brand-logo" src="logo.png" alt="Baqueano logo">
+        <span>Baqueano</span>
       </a>
       <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#install">Install</a>
-        <a href="https://github.com/Nicozilabe/sshm/releases">Releases</a>
-        <a href="https://github.com/Nicozilabe/sshm">GitHub</a>
+        <a href="https://github.com/Nicozilabe/baqueano/releases">Releases</a>
+        <a href="https://github.com/Nicozilabe/baqueano">GitHub</a>
         <a href="privacy.html">Privacy</a>
         <a href="terms.html">Terms</a>
       </div>
@@ -34,13 +34,13 @@
     <div class="container">
 
       <section class="hero">
-        <img class="hero-logo" src="logo.png" alt="SSHM logo">
-        <h1>SSHM</h1>
+        <img class="hero-logo" src="logo.png" alt="Baqueano logo">
+        <h1>Baqueano</h1>
         <p class="tagline">A modern, interactive <strong>SSH Manager</strong> for your terminal.
           Manage, organize and connect to your SSH hosts with a beautiful TUI.</p>
         <div class="buttons">
-          <a class="btn primary" href="https://github.com/Nicozilabe/sshm/releases/latest">Download</a>
-          <a class="btn" href="https://github.com/Nicozilabe/sshm">View on GitHub</a>
+          <a class="btn primary" href="https://github.com/Nicozilabe/baqueano/releases/latest">Download</a>
+          <a class="btn" href="https://github.com/Nicozilabe/baqueano">View on GitHub</a>
         </div>
       </section>
 
@@ -48,16 +48,16 @@
         <div class="terminal">
           <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
           <pre><span class="comment"># launch the interactive manager</span>
-<span class="prompt">$</span> sshm
+<span class="prompt">$</span> baq
 
 <span class="comment"># connect straight to a host</span>
-<span class="prompt">$</span> sshm prod-server
+<span class="prompt">$</span> baq prod-server
 
 <span class="comment"># run a command remotely</span>
-<span class="prompt">$</span> sshm prod-server uptime
+<span class="prompt">$</span> baq prod-server uptime
 
 <span class="comment"># sync your host list across machines (optional)</span>
-<span class="prompt">$</span> sshm drive sync</pre>
+<span class="prompt">$</span> baq drive sync</pre>
         </div>
       </section>
 
@@ -78,16 +78,16 @@
 
         <div class="step">
           <h3>Unix / Linux / macOS</h3>
-          <pre class="copy">curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix.sh | bash</pre>
+          <pre class="copy">curl -sSL https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/unix.sh | bash</pre>
         </div>
 
         <div class="step">
           <h3>Windows (PowerShell)</h3>
-          <pre class="copy">irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows.ps1 | iex</pre>
+          <pre class="copy">irm https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/windows.ps1 | iex</pre>
         </div>
 
         <p>Or download a prebuilt binary for your platform from the
-          <a href="https://github.com/Nicozilabe/sshm/releases/latest">latest release</a>.</p>
+          <a href="https://github.com/Nicozilabe/baqueano/releases/latest">latest release</a>.</p>
       </section>
 
       <section id="downloads">
@@ -97,25 +97,25 @@
             <tr><th>Platform</th><th>Architecture</th><th>Download</th></tr>
           </thead>
           <tbody>
-            <tr><td>Linux</td><td>AMD64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_x86_64.tar.gz">sshm_Linux_x86_64.tar.gz</a></td></tr>
-            <tr><td>Linux</td><td>ARM64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_arm64.tar.gz">sshm_Linux_arm64.tar.gz</a></td></tr>
-            <tr><td>macOS</td><td>Intel</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_x86_64.tar.gz">sshm_Darwin_x86_64.tar.gz</a></td></tr>
-            <tr><td>macOS</td><td>Apple Silicon</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_arm64.tar.gz">sshm_Darwin_arm64.tar.gz</a></td></tr>
-            <tr><td>Windows</td><td>AMD64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip">sshm_Windows_x86_64.zip</a></td></tr>
-            <tr><td>Windows</td><td>ARM64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_arm64.zip">sshm_Windows_arm64.zip</a></td></tr>
+            <tr><td>Linux</td><td>AMD64</td><td><a href="https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Linux_x86_64.tar.gz">baqueano_Linux_x86_64.tar.gz</a></td></tr>
+            <tr><td>Linux</td><td>ARM64</td><td><a href="https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Linux_arm64.tar.gz">baqueano_Linux_arm64.tar.gz</a></td></tr>
+            <tr><td>macOS</td><td>Intel</td><td><a href="https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Darwin_x86_64.tar.gz">baqueano_Darwin_x86_64.tar.gz</a></td></tr>
+            <tr><td>macOS</td><td>Apple Silicon</td><td><a href="https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Darwin_arm64.tar.gz">baqueano_Darwin_arm64.tar.gz</a></td></tr>
+            <tr><td>Windows</td><td>AMD64</td><td><a href="https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Windows_x86_64.zip">baqueano_Windows_x86_64.zip</a></td></tr>
+            <tr><td>Windows</td><td>ARM64</td><td><a href="https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Windows_arm64.zip">baqueano_Windows_arm64.zip</a></td></tr>
           </tbody>
         </table>
       </section>
 
       <section id="drive">
         <h2>Google Drive sync</h2>
-        <p>SSHM can keep your host list in sync across machines using your own Google
-          Drive. The data is stored in a private, app-specific folder that only SSHM can
+        <p>Baqueano can keep your host list in sync across machines using your own Google
+          Drive. The data is stored in a private, app-specific folder that only Baqueano can
           access, and it is never sent to any third party. <strong>No private keys are
           ever uploaded</strong> — only the host definitions from your SSH config.</p>
-        <pre class="copy">sshm drive login   # one-time authorization
-sshm drive sync    # merge local + remote and upload</pre>
-        <p>See the <a href="privacy.html">Privacy Policy</a> for details on how SSHM
+        <pre class="copy">baq drive login   # one-time authorization
+baq drive sync    # merge local + remote and upload</pre>
+        <p>See the <a href="privacy.html">Privacy Policy</a> for details on how Baqueano
           accesses and uses your Google data.</p>
       </section>
     </div>
@@ -124,7 +124,7 @@ sshm drive sync    # merge local + remote and upload</pre>
     <footer class="site-footer">
       <div class="container">
         <div>
-          SSHM — fork maintained by
+          Baqueano — fork maintained by
           <a href="https://github.com/Nicozilabe">Nicozilabe</a>.
           Originally created by
           <a href="https://github.com/Gu1llaum-3">Guillaume Archambault</a>.
@@ -133,7 +133,7 @@ sshm drive sync    # merge local + remote and upload</pre>
         <div class="footer-links">
           <a href="privacy.html">Privacy Policy</a>
           <a href="terms.html">Terms of Use</a>
-          <a href="https://github.com/Nicozilabe/sshm">GitHub</a>
+          <a href="https://github.com/Nicozilabe/baqueano">GitHub</a>
         </div>
       </div>
     </footer>

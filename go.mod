@@ -1,4 +1,4 @@
-module github.com/Nicozilabe/sshm
+module github.com/Nicozilabe/baqueano
 
 go 1.27.1
 

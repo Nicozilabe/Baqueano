@@ -20,7 +20,7 @@ const (
 	// AppDataFolder is the hidden per-app folder visible only to this client.
 	AppDataFolder = "appDataFolder"
 	// DefaultFileName is the document name inside the appDataFolder.
-	DefaultFileName = "sshm_config"
+	DefaultFileName = "baqueano_config"
 )
 
 // Drive is a Remote backed by a single file in Google Drive's appDataFolder.

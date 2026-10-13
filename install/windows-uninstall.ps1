@@ -1,10 +1,10 @@
-# SSHM Windows Uninstallation Script
+# Baqueano Windows Uninstallation Script
 # Usage:
-#   Online:  irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1 | iex
+#   Online:  irm https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/windows-uninstall.ps1 | iex
 #   Local:   .\install\windows-uninstall.ps1
 
 param(
-    [string]$InstallDir = "$env:LOCALAPPDATA\sshm",
+    [string]$InstallDir = "$env:LOCALAPPDATA\baqueano",
     [switch]$Force = $false,
     [switch]$Purge = $false
 )
@@ -25,28 +25,28 @@ function Write-Info { Write-ColorOutput Green $args }
 function Write-Warning { Write-ColorOutput Yellow $args }
 function Write-Error { Write-ColorOutput Red $args }
 
-Write-Info "🗑️  Uninstalling SSHM - SSH Manager"
+Write-Info "🗑️  Uninstalling Baqueano - SSH Manager"
 Write-Info ""
 
 # Resolve the installed binary, preferring the configured install directory
-$targetPath = "$InstallDir\sshm.exe"
+$targetPath = "$InstallDir\baq.exe"
 $binaryPath = $null
 if (Test-Path $targetPath) {
     $binaryPath = $targetPath
 } else {
-    $existingSSHM = Get-Command sshm -ErrorAction SilentlyContinue
-    if ($existingSSHM) {
-        $binaryPath = $existingSSHM.Source
+    $existingBaqueano = Get-Command baq -ErrorAction SilentlyContinue
+    if ($existingBaqueano) {
+        $binaryPath = $existingBaqueano.Source
     }
 }
 
 if (-not $binaryPath) {
-    Write-Warning "SSHM does not appear to be installed (checked $InstallDir and PATH)."
+    Write-Warning "Baqueano does not appear to be installed (checked $InstallDir and PATH)."
 }
 
 # Confirm before doing anything destructive
 if (-not $Force -and $binaryPath) {
-    $response = Read-Host "Do you want to uninstall SSHM? (y/N)"
+    $response = Read-Host "Do you want to uninstall Baqueano? (y/N)"
     if ($response -ne "y" -and $response -ne "Y") {
         Write-Info "Uninstallation cancelled."
         exit 0
@@ -86,7 +86,7 @@ if ($userPath -and ($userPath -like "*$InstallDir*")) {
 
 # Optionally remove the configuration directory
 if ($Purge) {
-    $configDir = if ($env:APPDATA) { "$env:APPDATA\sshm" } else { "$env:USERPROFILE\.config\sshm" }
+    $configDir = if ($env:APPDATA) { "$env:APPDATA\baqueano" } else { "$env:USERPROFILE\.config\baqueano" }
     if (Test-Path $configDir) {
         Write-Info "Removing configuration directory: $configDir"
         Remove-Item -Path $configDir -Force -Recurse
@@ -97,10 +97,10 @@ if ($Purge) {
 }
 
 Write-Info ""
-Write-Info "✅ SSHM was uninstalled successfully."
+Write-Info "✅ Baqueano was uninstalled successfully."
 
 if (-not $Purge) {
-    $configDir = if ($env:APPDATA) { "$env:APPDATA\sshm" } else { "$env:USERPROFILE\.config\sshm" }
+    $configDir = if ($env:APPDATA) { "$env:APPDATA\baqueano" } else { "$env:USERPROFILE\.config\baqueano" }
     if (Test-Path $configDir) {
         Write-Warning "Your configuration was kept at $configDir"
         Write-Warning "Run with -Purge to remove it as well."

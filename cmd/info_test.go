@@ -118,7 +118,7 @@ Host prod-web
 		t.Fatalf("output not JSON: %v\noutput=%q", err, out)
 	}
 
-	if resp.Schema != "sshm.info.v1" {
+	if resp.Schema != "baqueano.info.v1" {
 		t.Fatalf("schema=%q", resp.Schema)
 	}
 	if !resp.OK {

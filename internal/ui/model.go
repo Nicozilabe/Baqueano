@@ -1,10 +1,10 @@
 package ui
 
 import (
-	"github.com/Nicozilabe/sshm/internal/config"
-	"github.com/Nicozilabe/sshm/internal/connectivity"
-	"github.com/Nicozilabe/sshm/internal/history"
-	"github.com/Nicozilabe/sshm/internal/version"
+	"github.com/Nicozilabe/baqueano/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/connectivity"
+	"github.com/Nicozilabe/baqueano/internal/history"
+	"github.com/Nicozilabe/baqueano/internal/version"
 
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"

@@ -1,5 +1,5 @@
-# Builds sshm, injecting the Google OAuth client from .env (if present) so that
-# `sshm drive login` works without prompting. `.env` is gitignored.
+# Builds baq, injecting the Google OAuth client from .env (if present) so that
+# `baq drive login` works without prompting. `.env` is gitignored.
 #
 # Usage:  pwsh -File scripts/build.ps1
 $ErrorActionPreference = "Stop"
@@ -20,17 +20,17 @@ if (Test-Path $envFile) {
 }
 
 $version = "dev"
-$ldflags = "-s -w -X github.com/Nicozilabe/sshm/cmd.AppVersion=$version"
-if ($env:SSHM_GOOGLE_CLIENT_ID) {
-    $ldflags += " -X github.com/Nicozilabe/sshm/internal/drive.builtinClientID=$($env:SSHM_GOOGLE_CLIENT_ID)"
+$ldflags = "-s -w -X github.com/Nicozilabe/baqueano/cmd.AppVersion=$version"
+if ($env:BAQUEANO_GOOGLE_CLIENT_ID) {
+    $ldflags += " -X github.com/Nicozilabe/baqueano/internal/drive.builtinClientID=$($env:BAQUEANO_GOOGLE_CLIENT_ID)"
 }
-if ($env:SSHM_GOOGLE_CLIENT_SECRET) {
-    $ldflags += " -X github.com/Nicozilabe/sshm/internal/drive.builtinClientSecret=$($env:SSHM_GOOGLE_CLIENT_SECRET)"
+if ($env:BAQUEANO_GOOGLE_CLIENT_SECRET) {
+    $ldflags += " -X github.com/Nicozilabe/baqueano/internal/drive.builtinClientSecret=$($env:BAQUEANO_GOOGLE_CLIENT_SECRET)"
 }
 
 $outDir = Join-Path $root "dist"
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
-$out = Join-Path $outDir "sshm.exe"
+$out = Join-Path $outDir "baq.exe"
 
 Push-Location $root
 try {
@@ -40,8 +40,8 @@ try {
     Pop-Location
 }
 
-if ($env:SSHM_GOOGLE_CLIENT_ID) {
+if ($env:BAQUEANO_GOOGLE_CLIENT_ID) {
     Write-Host "Built $out (with embedded Google client)"
 } else {
-    Write-Host "Built $out (no .env / client id; 'sshm drive login' will ask for credentials)"
+    Write-Host "Built $out (no .env / client id; 'baq drive login' will ask for credentials)"
 }

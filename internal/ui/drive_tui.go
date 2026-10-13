@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Nicozilabe/sshm/internal/config"
-	"github.com/Nicozilabe/sshm/internal/drive"
+	"github.com/Nicozilabe/baqueano/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/drive"
 	"github.com/spf13/cobra"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -149,7 +149,7 @@ func readSecretForTUI(r io.Reader) (string, error) {
 func writeWithBackupTUI(path string, data []byte) (string, error) {
 	backup := ""
 	if existing, err := os.ReadFile(path); err == nil {
-		if dir, derr := config.GetSSHMBackupDir(); derr == nil {
+		if dir, derr := config.GetBaqueanoBackupDir(); derr == nil {
 			if merr := os.MkdirAll(dir, 0700); merr == nil {
 				backup = filepath.Join(dir, fmt.Sprintf("config-%d.bak", time.Now().Unix()))
 				if werr := os.WriteFile(backup, existing, 0600); werr != nil {

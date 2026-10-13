@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 )
 
 // sortHosts sorts hosts according to the current sort mode

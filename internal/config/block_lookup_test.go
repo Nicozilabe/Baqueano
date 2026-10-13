@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// hostLineVariants are Host lines that OpenSSH and the sshm parser read as "Host foo"
+// hostLineVariants are Host lines that OpenSSH and the baq parser read as "Host foo"
 var hostLineVariants = []string{"host foo", "Host\tfoo", "Host=foo", `Host "foo"`, "HOST  foo # main"}
 
 func hostsByName(t *testing.T, path string) map[string][]SSHHost {

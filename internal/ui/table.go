@@ -3,8 +3,8 @@ package ui
 import (
 	"strings"
 
-	"github.com/Nicozilabe/sshm/internal/config"
-	"github.com/Nicozilabe/sshm/internal/history"
+	"github.com/Nicozilabe/baqueano/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/history"
 
 	"github.com/charmbracelet/bubbles/table"
 )

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 
 	"github.com/spf13/cobra"
 )
@@ -27,10 +27,10 @@ var searchCmd = &cobra.Command{
 The search is case-insensitive and will match partial strings.
 
 Examples:
-  sshm search web          # Search for hosts containing "web"
-  sshm search --tags dev   # Search only in tags for "dev"
-  sshm search --names prod # Search only in host names for "prod"
-  sshm search --format json server # Output results in JSON format`,
+  baq search web          # Search for hosts containing "web"
+  baq search --tags dev   # Search only in tags for "dev"
+  baq search --names prod # Search only in host names for "prod"
+  baq search --format json server # Output results in JSON format`,
 	Args: cobra.MaximumNArgs(1),
 	Run:  runSearch,
 }

@@ -1,5 +1,5 @@
 version: 2
-project_name: sshm
+project_name: baqueano
 
 before:
   hooks:
@@ -7,9 +7,9 @@ before:
   - go test ./...
 
 builds:
-- id: sshm
+- id: baqueano
   main: ./main.go
-  binary: sshm
+  binary: baq
   goos:
   - linux
   - windows
@@ -32,14 +32,14 @@ builds:
   - CGO_ENABLED=0
   ldflags:
   - -s -w
-  - -X github.com/Nicozilabe/sshm/cmd.AppVersion={{.Version}}
-  - -X github.com/Nicozilabe/sshm/internal/drive.builtinClientID={{.Env.SSHM_GOOGLE_CLIENT_ID}}
-  - -X github.com/Nicozilabe/sshm/internal/drive.builtinClientSecret={{.Env.SSHM_GOOGLE_CLIENT_SECRET}}
+  - -X github.com/Nicozilabe/baqueano/cmd.AppVersion={{.Version}}
+  - -X github.com/Nicozilabe/baqueano/internal/drive.builtinClientID={{.Env.BAQUEANO_GOOGLE_CLIENT_ID}}
+  - -X github.com/Nicozilabe/baqueano/internal/drive.builtinClientSecret={{.Env.BAQUEANO_GOOGLE_CLIENT_SECRET}}
   flags:
   - -trimpath
 
 archives:
-- id: sshm
+- id: baqueano
   formats: [ "tar.gz" ]
   # Use zip for Windows
   format_overrides:
@@ -88,9 +88,9 @@ release:
   target_commitish: "{{ .Commit }}"
   name_template: "{{.ProjectName}} {{.Version}}"
   header: |
-    ## SSHM {{.Version}}
+    ## Baqueano {{.Version}}
 
-    Thank you for downloading SSHM!
+    Thank you for downloading Baqueano!
 
   footer: |
     ## Installation
@@ -98,12 +98,12 @@ release:
     ### Installation Script (Recommended)
     **Unix/Linux/macOS:**
     ```bash
-    curl -sSL https://github.com/Nicozilabe/sshm/raw/main/install/unix.sh | bash
+    curl -sSL https://github.com/Nicozilabe/baqueano/raw/main/install/unix.sh | bash
     ```
 
     **Windows (PowerShell):**
     ```powershell
-    iwr -useb https://github.com/Nicozilabe/sshm/raw/main/install/windows.ps1 | iex
+    iwr -useb https://github.com/Nicozilabe/baqueano/raw/main/install/windows.ps1 | iex
     ```
 
     ### Manual Installation
@@ -111,13 +111,13 @@ release:
 
     ## Full Changelog
 
-    See all changes at https://github.com/Nicozilabe/sshm/compare/{{.PreviousTag}}...{{.Tag}}
+    See all changes at https://github.com/Nicozilabe/baqueano/compare/{{.PreviousTag}}...{{.Tag}}
 
     ---
 
-    📖 **Documentation:** See the updated [README](https://github.com/Nicozilabe/sshm/blob/main/README.md)
+    📖 **Documentation:** See the updated [README](https://github.com/Nicozilabe/baqueano/blob/main/README.md)
 
-    🐛 **Issues:** Found a bug? Open an [issue](https://github.com/Nicozilabe/sshm/issues)
+    🐛 **Issues:** Found a bug? Open an [issue](https://github.com/Nicozilabe/baqueano/issues)
 
     ---
 

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/Nicozilabe/sshm/internal/config"
-	"github.com/Nicozilabe/sshm/internal/connectivity"
-	"github.com/Nicozilabe/sshm/internal/history"
-	"github.com/Nicozilabe/sshm/internal/ui"
+	"github.com/Nicozilabe/baqueano/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/connectivity"
+	"github.com/Nicozilabe/baqueano/internal/history"
+	"github.com/Nicozilabe/baqueano/internal/ui"
 
 	"github.com/spf13/cobra"
 )
@@ -33,25 +33,25 @@ var noUpdateCheck bool
 
 // RootCmd is the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "sshm [host] [command...]",
+	Use:   "baq [host] [command...]",
 	Short: "SSH Manager - A modern SSH connection manager",
-	Long: `SSHM is a modern SSH manager for your terminal.
+	Long: `Baqueano is a modern SSH manager for your terminal.
 
 Main usage:
-  Running 'sshm' (without arguments) opens the interactive TUI window to browse, search, and connect to your SSH hosts graphically.
-  Running 'sshm <host>' connects directly to the specified host and records the connection in your history.
-  Running 'sshm <host> <command>' executes the command on the remote host and returns the output.
+  Running 'baq' (without arguments) opens the interactive TUI window to browse, search, and connect to your SSH hosts graphically.
+  Running 'baq <host>' connects directly to the specified host and records the connection in your history.
+  Running 'baq <host> <command>' executes the command on the remote host and returns the output.
 
-You can also use sshm in CLI mode for other operations like adding, editing, or searching hosts.
+You can also use baq in CLI mode for other operations like adding, editing, or searching hosts.
 
 Hosts are read from your ~/.ssh/config file by default.
 
 Examples:
-  sshm                           # Open interactive TUI
-  sshm prod-server               # Connect to host interactively
-  sshm prod-server uptime        # Execute 'uptime' on remote host
-  sshm prod-server ls -la /var   # Execute command with arguments
-  sshm -t prod-server sudo reboot # Force TTY for interactive commands`,
+  baq                           # Open interactive TUI
+  baq prod-server               # Connect to host interactively
+  baq prod-server uptime        # Execute 'uptime' on remote host
+  baq prod-server ls -la /var   # Execute command with arguments
+  baq -t prod-server sudo reboot # Force TTY for interactive commands`,
 	Version:       AppVersion,
 	Args:          cobra.ArbitraryArgs,
 	SilenceUsage:  true,
@@ -167,7 +167,7 @@ func connectToHost(hostName string, remoteCommand []string) {
 
 	if !hostFound {
 		fmt.Printf("Error: Host '%s' not found in SSH configuration.\n", hostName)
-		fmt.Println("Use 'sshm' to see available hosts.")
+		fmt.Println("Use 'baq' to see available hosts.")
 		os.Exit(1)
 	}
 

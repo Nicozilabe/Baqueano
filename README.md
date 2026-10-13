@@ -1,27 +1,27 @@
 
 
 <p align="center">
-    <img src="images/logo.png" alt="SSHM Logo" width="120" />
+    <img src="images/logo.png" alt="Baqueano Logo" width="120" />
 </p>
 
-# SSHM - SSH Manager
+# Baqueano - SSH Manager
 
 [![Go](https://img.shields.io/badge/Go-1.27+-00ADD8?style=for-the-badge&logo=go)](https://golang.org/)
-[![Release](https://img.shields.io/github/v/release/Nicozilabe/sshm?style=for-the-badge)](https://github.com/Nicozilabe/sshm/releases)
-[![License](https://img.shields.io/github/license/Nicozilabe/sshm?style=for-the-badge)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)](https://github.com/Nicozilabe/sshm/releases)
+[![Release](https://img.shields.io/github/v/release/Nicozilabe/baqueano?style=for-the-badge)](https://github.com/Nicozilabe/baqueano/releases)
+[![License](https://img.shields.io/github/license/Nicozilabe/baqueano?style=for-the-badge)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)](https://github.com/Nicozilabe/baqueano/releases)
 
-> **This is a fork** of [Gu1llaum-3/sshm](https://github.com/Gu1llaum-3/sshm), maintained by [Nicozilabe](https://github.com/Nicozilabe). It adds optional Google Drive sync on top of the original project; the original MIT license and attribution are preserved.
+> **This is a fork** of the original project by [Guillaume Archambault (@Gu1llaum-3)](https://github.com/Gu1llaum-3), maintained by [Nicozilabe](https://github.com/Nicozilabe). It adds optional Google Drive sync on top of the original project; the original MIT license and attribution are preserved.
 
 > **A modern, interactive SSH Manager for your terminal**
 
-> **Website:** [nicozilabe.github.io/sshm](https://nicozilabe.github.io/sshm/) · [Privacy Policy](https://nicozilabe.github.io/sshm/privacy.html) · [Terms of Use](https://nicozilabe.github.io/sshm/terms.html)
+> **Website:** [nicozilabe.github.io/baqueano](https://nicozilabe.github.io/baqueano/) · [Privacy Policy](https://nicozilabe.github.io/baqueano/privacy.html) · [Terms of Use](https://nicozilabe.github.io/baqueano/terms.html)
 
-SSHM is a beautiful command-line tool that transforms how you manage and connect to your SSH hosts. Built with Go and featuring an intuitive TUI interface, it makes SSH connection management effortless and enjoyable.
+Baqueano is a beautiful command-line tool that transforms how you manage and connect to your SSH hosts. Built with Go and featuring an intuitive TUI interface, it makes SSH connection management effortless and enjoyable.
 
 <p align="center">
-    <a href="images/sshm.gif" target="_blank">
-        <img src="images/sshm.gif" alt="Demo SSHM Terminal" width="800" />
+    <a href="images/baq.gif" target="_blank">
+        <img src="images/baq.gif" alt="Demo Baqueano Terminal" width="800" />
     </a>
     <br>
     <em>Click on the image to view in full size</em>
@@ -31,7 +31,7 @@ SSHM is a beautiful command-line tool that transforms how you manage and connect
 
 ### **Core Capabilities**
 - **Beautiful TUI Interface** - Navigate your SSH hosts with an elegant, interactive terminal UI
-- **Quick Connect** - Connect to any host instantly through the TUI or the CLI with `sshm <host>`
+- **Quick Connect** - Connect to any host instantly through the TUI or the CLI with `baq <host>`
 - **Port Forwarding** - Easy setup for Local, Remote, and Dynamic (SOCKS) forwarding with history persistence
 - **Easy Management** - Add, edit, move, and manage SSH configurations seamlessly
 - **Tag Support** - Organize your hosts with custom tags for better categorization; use the special `hidden` tag to exclude hosts from the list while keeping them connectable
@@ -59,46 +59,46 @@ SSHM is a beautiful command-line tool that transforms how you manage and connect
 
 **Unix/Linux/macOS (One-line install):**
 ```bash
-curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix.sh | bash
+curl -sSL https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/unix.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows.ps1 | iex
+irm https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/windows.ps1 | iex
 ```
 
 **Alternative methods:**
 
 *Linux/macOS:*
 ```bash
-# Download a specific release (asset shape: sshm_<OS>_<arch>.tar.gz)
-wget https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_x86_64.tar.gz
+# Download a specific release (asset shape: baqueano_<OS>_<arch>.tar.gz)
+wget https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Linux_x86_64.tar.gz
 
 # Extract and install
-tar -xzf sshm_Linux_x86_64.tar.gz
-sudo mv sshm /usr/local/bin/sshm
+tar -xzf baqueano_Linux_x86_64.tar.gz
+sudo mv baq /usr/local/bin/baq
 ```
 
 *Windows:*
 ```powershell
 # Download and extract
-Invoke-WebRequest -Uri "https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip" -OutFile "sshm_Windows_x86_64.zip"
-Expand-Archive sshm_Windows_x86_64.zip -DestinationPath C:\tools\
+Invoke-WebRequest -Uri "https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Windows_x86_64.zip" -OutFile "baqueano_Windows_x86_64.zip"
+Expand-Archive baqueano_Windows_x86_64.zip -DestinationPath C:\tools\
 # Add C:\tools to your PATH environment variable
 ```
 
 ### Uninstalling
 
-Removing SSHM is just as easy as installing it.
+Removing Baqueano is just as easy as installing it.
 
 **Unix/Linux/macOS:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix-uninstall.sh | bash
+curl -sSL https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/unix-uninstall.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-uninstall.ps1 | iex
+irm https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/windows-uninstall.ps1 | iex
 ```
 
 > By default your configuration (history, backups, saved credentials) is kept.
@@ -108,10 +108,10 @@ irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows-unins
 
 ### Interactive Mode
 
-Launch SSHM without arguments to enter the beautiful TUI interface:
+Launch Baqueano without arguments to enter the beautiful TUI interface:
 
 ```bash
-sshm
+baq
 ```
 
 **Search (focused at startup):**
@@ -157,7 +157,7 @@ The interactive forms will guide you through configuration:
 
 ### Port Forwarding
 
-SSHM provides an intuitive interface for setting up SSH port forwarding. Press `f` while selecting a host to open the port forwarding setup:
+Baqueano provides an intuitive interface for setting up SSH port forwarding. Press `f` while selecting a host to open the port forwarding setup:
 
 **Forward Types:**
 - **Local (-L)** - Forward a local port to a remote host/port through the SSH connection
@@ -242,95 +242,95 @@ chrome --proxy-server="socks5://localhost:[your_port]"
 
 ### CLI Usage
 
-SSHM provides both command-line operations and an interactive TUI interface:
+Baqueano provides both command-line operations and an interactive TUI interface:
 
 ```bash
 # Launch interactive TUI mode for browsing and connecting to hosts
-sshm
+baq
 
 # Connect directly to a specific host (with history tracking)
-sshm my-server
+baq my-server
 
 # Execute a command on a remote host
-sshm my-server uptime
+baq my-server uptime
 
 # Execute command with arguments
-sshm my-server ls -la /var/log
+baq my-server ls -la /var/log
 
 # Force TTY allocation for interactive commands
-sshm -t my-server sudo systemctl restart nginx
+baq -t my-server sudo systemctl restart nginx
 
 # Launch TUI with custom SSH config file
-sshm -c /path/to/custom/ssh_config
+baq -c /path/to/custom/ssh_config
 
 # Connect directly with custom SSH config file
-sshm my-server -c /path/to/custom/ssh_config
+baq my-server -c /path/to/custom/ssh_config
 
 # Add a new host using interactive form
-sshm add
+baq add
 
 # Add a new host with pre-filled hostname
-sshm add hostname
+baq add hostname
 
 # Add a new host with custom SSH config file
-sshm add hostname -c /path/to/custom/ssh_config
+baq add hostname -c /path/to/custom/ssh_config
 
 # Edit an existing host configuration
-sshm edit my-server
+baq edit my-server
 
 # Edit host with custom SSH config file
-sshm edit my-server -c /path/to/custom/ssh_config
+baq edit my-server -c /path/to/custom/ssh_config
 
 # Move a host to another SSH config file (requires Include directives)
-sshm move my-server
+baq move my-server
 
 # Move host with custom SSH config file (requires Include directives)
-sshm move my-server -c /path/to/custom/ssh_config
+baq move my-server -c /path/to/custom/ssh_config
 
 # Search for hosts (interactive filter)
-sshm search
+baq search
 
 # Print machine-readable info (JSON) for scripting
-sshm info prod-server
-sshm info prod-server --pretty
+baq info prod-server
+baq info prod-server --pretty
 
 # With a custom SSH config file
-sshm -c /path/to/custom/ssh_config info prod-server
+baq -c /path/to/custom/ssh_config info prod-server
 
 # Pipe to jq
-sshm info prod-server | jq -r '.result.target.hostname'
-sshm info prod-server | jq -r '.result.target.user'
+baq info prod-server | jq -r '.result.target.hostname'
+baq info prod-server | jq -r '.result.target.user'
 
 # Show version information
-sshm --version
+baq --version
 
 # Disable automatic update check (useful on air-gapped machines)
-sshm --no-update-check
+baq --no-update-check
 
 # Show help and available commands
-sshm --help
+baq --help
 ```
 
 ### Host Info (JSON)
 
-`sshm info <hostname>` prints a single JSON object to stdout so you can script against it with `jq`.
+`baq info <hostname>` prints a single JSON object to stdout so you can script against it with `jq`.
 
 ```bash
 # Extract fields
-sshm info prod-server | jq -r '.result.target.hostname'
-sshm info prod-server | jq -r '.result.target.port'
+baq info prod-server | jq -r '.result.target.hostname'
+baq info prod-server | jq -r '.result.target.port'
 
 # Check not-found (exit code 2)
-sshm info does-not-exist | jq -r '.error.code'
+baq info does-not-exist | jq -r '.error.code'
 ```
 
 ### Shell Completion
 
-SSHM supports shell completion for host names, making it easy to connect to hosts without typing full names:
+Baqueano supports shell completion for host names, making it easy to connect to hosts without typing full names:
 
 ```bash
-sshm <TAB>           # Lists all available hosts
-sshm pro<TAB>        # Completes to hosts starting with "pro" (e.g., prod-server)
+baq <TAB>           # Lists all available hosts
+baq pro<TAB>        # Completes to hosts starting with "pro" (e.g., prod-server)
 ```
 
 **Setup Instructions:**
@@ -338,48 +338,48 @@ sshm pro<TAB>        # Completes to hosts starting with "pro" (e.g., prod-server
 **Bash:**
 ```bash
 # Enable for current session
-source <(sshm completion bash)
+source <(baq completion bash)
 
 # Enable permanently (add to ~/.bashrc)
-echo 'source <(sshm completion bash)' >> ~/.bashrc
+echo 'source <(baq completion bash)' >> ~/.bashrc
 ```
 
 **Zsh:**
 ```bash
 # Enable for current session
-source <(sshm completion zsh)
+source <(baq completion zsh)
 
 # Enable permanently (add to ~/.zshrc)
-echo 'source <(sshm completion zsh)' >> ~/.zshrc
+echo 'source <(baq completion zsh)' >> ~/.zshrc
 ```
 
 **Fish:**
 ```bash
 # Enable for current session
-sshm completion fish | source
+baq completion fish | source
 
 # Enable permanently
-sshm completion fish > ~/.config/fish/completions/sshm.fish
+baq completion fish > ~/.config/fish/completions/baq.fish
 ```
 
 **PowerShell:**
 ```powershell
 # Enable for current session
-sshm completion powershell | Out-String | Invoke-Expression
+baq completion powershell | Out-String | Invoke-Expression
 
 # Enable permanently (add to your PowerShell profile)
-Add-Content $PROFILE 'sshm completion powershell | Out-String | Invoke-Expression'
+Add-Content $PROFILE 'baq completion powershell | Out-String | Invoke-Expression'
 ```
 
 ### Direct Host Connection
 
-SSHM supports direct connection to hosts via the command line, making it easy to integrate into your existing workflow:
+Baqueano supports direct connection to hosts via the command line, making it easy to integrate into your existing workflow:
 
 ```bash
 # Connect directly to any configured host
-sshm production-server
-sshm db-staging
-sshm web-01
+baq production-server
+baq db-staging
+baq web-01
 
 # All direct connections are tracked in your history
 # Use the TUI to see your most recently connected hosts
@@ -397,19 +397,19 @@ Execute commands on remote hosts without opening an interactive shell:
 
 ```bash
 # Execute a single command
-sshm prod-server uptime
+baq prod-server uptime
 
 # Execute command with arguments
-sshm prod-server ls -la /var/log
+baq prod-server ls -la /var/log
 
 # Check disk usage
-sshm prod-server df -h
+baq prod-server df -h
 
 # View logs (pipe to local commands)
-sshm prod-server 'cat /var/log/nginx/access.log' | grep 404
+baq prod-server 'cat /var/log/nginx/access.log' | grep 404
 
 # Force TTY allocation for interactive commands (sudo, vim, etc.)
-sshm -t prod-server sudo systemctl restart nginx
+baq -t prod-server sudo systemctl restart nginx
 ```
 
 **Features:**
@@ -420,11 +420,11 @@ sshm -t prod-server sudo systemctl restart nginx
 
 ### Backup Configuration
 
-SSHM automatically creates backups of your SSH configuration files before making any changes to ensure your configurations are safe.
+Baqueano automatically creates backups of your SSH configuration files before making any changes to ensure your configurations are safe.
 
 **Backup Location:**
-- **Unix/Linux/macOS**: `~/.config/sshm/backups/` (or `$XDG_CONFIG_HOME/sshm/backups/` if set)
-- **Windows**: `%APPDATA%\sshm\backups\` (fallback: `%USERPROFILE%\.config\sshm\backups\`)
+- **Unix/Linux/macOS**: `~/.config/baqueano/backups/` (or `$XDG_CONFIG_HOME/baqueano/backups/` if set)
+- **Windows**: `%APPDATA%\baqueano\backups\` (fallback: `%USERPROFILE%\.config\baqueano\backups\`)
 
 **Key Features:**
 - Automatic backup before any modification
@@ -439,30 +439,30 @@ SSHM automatically creates backups of your SSH configuration files before making
 **Quick Recovery:**
 ```bash
 # Unix/Linux/macOS
-cp ~/.config/sshm/backups/config.backup ~/.ssh/config
+cp ~/.config/baqueano/backups/config.backup ~/.ssh/config
 
 # Windows
-copy "%APPDATA%\sshm\backups\config.backup" "%USERPROFILE%\.ssh\config"
+copy "%APPDATA%\baqueano\backups\config.backup" "%USERPROFILE%\.ssh\config"
 ```
 
 ### Configuration File Options
 
-By default, SSHM uses the standard SSH configuration file at `~/.ssh/config`. You can specify a different configuration file using the `-c` flag:
+By default, Baqueano uses the standard SSH configuration file at `~/.ssh/config`. You can specify a different configuration file using the `-c` flag:
 
 ```bash
 # Use custom config file in TUI mode
-sshm -c /path/to/custom/ssh_config
+baq -c /path/to/custom/ssh_config
 
 # Use custom config file with commands
-sshm add hostname -c /path/to/custom/ssh_config
-sshm edit hostname -c /path/to/custom/ssh_config
-sshm move hostname -c /path/to/custom/ssh_config
+baq add hostname -c /path/to/custom/ssh_config
+baq edit hostname -c /path/to/custom/ssh_config
+baq move hostname -c /path/to/custom/ssh_config
 ```
 
 ### Google Drive Sync (experimental)
 
 Keep the same SSH host list on several machines by storing it in your Google
-Drive. Hosts live in a hidden **appDataFolder** that only sshm can see, so they
+Drive. Hosts live in a hidden **appDataFolder** that only baq can see, so they
 never mix with your regular Drive files. Only the SSH config document is
 synced: **private keys are never uploaded**.
 
@@ -471,10 +471,10 @@ synced: **private keys are never uploaded**.
 Just authorize once:
 
 ```bash
-sshm drive login
+baq drive login
 ```
 
-sshm ships with a built-in OAuth client (compiled into the binary), so this
+baq ships with a built-in OAuth client (compiled into the binary), so this
 opens the browser to finish authorization — no ids to enter. This applies to
 official releases, and to local builds made with the bundled build script or
 `make` (see "Building from source" below).
@@ -486,8 +486,8 @@ To use your own client instead of the embedded one, provide it either as
 environment variables:
 
 ```bash
-export SSHM_GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
-export SSHM_GOOGLE_CLIENT_SECRET=xxxxxxxx
+export BAQUEANO_GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
+export BAQUEANO_GOOGLE_CLIENT_SECRET=xxxxxxxx
 ```
 
 or in `<config-dir>/drive_client.json`:
@@ -496,14 +496,14 @@ or in `<config-dir>/drive_client.json`:
 { "client_id": "...", "client_secret": "..." }
 ```
 
-(`<config-dir>` is `%APPDATA%\sshm` on Windows, `~/.config/sshm` elsewhere.)
-Non-interactive alternative: `sshm drive login --client-id ID --client-secret SECRET`.
+(`<config-dir>` is `%APPDATA%\baqueano` on Windows, `~/.config/baqueano` elsewhere.)
+Non-interactive alternative: `baq drive login --client-id ID --client-secret SECRET`.
 Precedence: env vars > `drive_client.json` > embedded client.
 
 </details>
 
 > **Maintainers:** the embedded client is injected at build time from
-> `SSHM_GOOGLE_CLIENT_ID` / `SSHM_GOOGLE_CLIENT_SECRET` — GitHub Actions secrets
+> `BAQUEANO_GOOGLE_CLIENT_ID` / `BAQUEANO_GOOGLE_CLIENT_SECRET` — GitHub Actions secrets
 > for releases, or a gitignored `.env` (from `.env.example`) for local builds.
 > Nothing secret is committed. Desktop-app client secrets are not treated as
 > confidential by Google — they ship inside every installed app.
@@ -511,13 +511,13 @@ Precedence: env vars > `drive_client.json` > embedded client.
 **Everyday use**
 
 ```bash
-sshm drive sync          # merge local + remote (local wins), upload the result
-sshm drive sync --dry-run # show what would change, write nothing
-sshm drive pull          # overwrite local with the remote copy (no merge)
-sshm drive push          # overwrite the remote with the local copy (no merge)
+baq drive sync          # merge local + remote (local wins), upload the result
+baq drive sync --dry-run # show what would change, write nothing
+baq drive pull          # overwrite local with the remote copy (no merge)
+baq drive push          # overwrite the remote with the local copy (no merge)
 ```
 
-`sync` writes a backup of the current local config to the sshm backup
+`sync` writes a backup of the current local config to the baq backup
 directory before overwriting it. Remote-only hosts are appended; if a host
 exists on both sides the local definition is kept.
 
@@ -525,14 +525,14 @@ exists on both sides the local definition is kept.
 
 #### Host Movement Between Config Files
 
-SSHM provides a powerful `move` command to relocate SSH hosts between different configuration files. **This feature requires SSH Include directives to be present in your SSH configuration.**
+Baqueano provides a powerful `move` command to relocate SSH hosts between different configuration files. **This feature requires SSH Include directives to be present in your SSH configuration.**
 
 ```bash
 # Move a host to another config file (requires Include directives)
-sshm move my-server
+baq move my-server
 
 # Move with custom config file (requires Include directives)
-sshm move my-server -c /path/to/custom/ssh_config
+baq move my-server -c /path/to/custom/ssh_config
 ```
 
 **Important Requirements:**
@@ -567,7 +567,7 @@ Host personal-server
 
 #### Connectivity Status
 
-SSHM features asynchronous SSH connectivity checking that provides visual indicators of host availability:
+Baqueano features asynchronous SSH connectivity checking that provides visual indicators of host availability:
 
 **Status Indicators:**
 - **Online** - SSH connection successful (shows response time)
@@ -583,7 +583,7 @@ SSHM features asynchronous SSH connectivity checking that provides visual indica
 
 #### Automatic Update Checking
 
-SSHM includes built-in version checking that notifies you of available updates:
+Baqueano includes built-in version checking that notifies you of available updates:
 
 **Features:**
 - **Background checking** - Version check happens asynchronously, never blocking startup
@@ -601,10 +601,10 @@ SSHM includes built-in version checking that notifies you of available updates:
 
 Via the CLI flag (one-time):
 ```bash
-sshm --no-update-check
+baq --no-update-check
 ```
 
-Via `~/.config/sshm/config.json` (persistent):
+Via `~/.config/baqueano/config.json` (persistent):
 ```json
 {
   "check_for_updates": false
@@ -613,7 +613,7 @@ Via `~/.config/sshm/config.json` (persistent):
 
 #### Port Forwarding History
 
-SSHM remembers your port forwarding configurations for easy reuse:
+Baqueano remembers your port forwarding configurations for easy reuse:
 
 **Features:**
 - **Automatic saving** - Successful forwarding setups are saved automatically
@@ -625,7 +625,7 @@ SSHM remembers your port forwarding configurations for easy reuse:
 ### Platform-Specific Notes
 
 **Windows:**
-- SSHM works with the built-in OpenSSH client (Windows 10/11)
+- Baqueano works with the built-in OpenSSH client (Windows 10/11)
 - Configuration file location: `%USERPROFILE%\.ssh\config`
 - Compatible with WSL SSH configurations
 - Supports the same SSH options as Unix systems
@@ -637,11 +637,11 @@ SSHM remembers your port forwarding configurations for easy reuse:
 
 ## Configuration
 
-SSHM works directly with your standard SSH configuration file (`~/.ssh/config`). It adds special comment tags for enhanced functionality while maintaining full compatibility with standard SSH tools.
+Baqueano works directly with your standard SSH configuration file (`~/.ssh/config`). It adds special comment tags for enhanced functionality while maintaining full compatibility with standard SSH tools.
 
 ### SSH Include Support
 
-SSHM fully supports SSH Include directives, allowing you to organize your SSH configurations across multiple files. This is particularly useful for managing large numbers of hosts or organizing configurations by environment, project, or team.
+Baqueano fully supports SSH Include directives, allowing you to organize your SSH configurations across multiple files. This is particularly useful for managing large numbers of hosts or organizing configurations by environment, project, or team.
 
 **Include Examples:**
 ```ssh
@@ -722,7 +722,7 @@ Host backend-prod
 
 ### Supported SSH Options
 
-SSHM supports all standard SSH configuration options:
+Baqueano supports all standard SSH configuration options:
 
 **Built-in Fields:**
 - `HostName` - Server hostname or IP address
@@ -731,10 +731,10 @@ SSHM supports all standard SSH configuration options:
 - `IdentityFile` - Path to private key file
 - `ProxyJump` - Jump server for connection tunneling (e.g., `user@jumphost:port`)
 - `ProxyCommand` - Jump command for connection tunneling (e.g, `ssh -W %h:%p Jumphost`)
-- `Tags` - Custom tags (SSHM extension); the special tag `hidden` hides the host from the TUI and `sshm search` while keeping it connectable via `sshm <host>`
+- `Tags` - Custom tags (Baqueano extension); the special tag `hidden` hides the host from the TUI and `baq search` while keeping it connectable via `baq <host>`
 
 **Additional SSH Options:**
-You can add any valid SSH option using the "SSH Options" field in the interactive forms. Enter them in command-line format (e.g., `-o Compression=yes -o ServerAliveInterval=60`) and SSHM will automatically convert them to the proper SSH config format.
+You can add any valid SSH option using the "SSH Options" field in the interactive forms. Enter them in command-line format (e.g., `-o Compression=yes -o ServerAliveInterval=60`) and Baqueano will automatically convert them to the proper SSH config format.
 
 **Common SSH Options:**
 - `Compression` - Enable/disable compression (`yes`/`no`)
@@ -766,11 +766,11 @@ This will be automatically converted to:
 
 ### Application Configuration
 
-SSHM supports a configuration file to customize its behavior, including key bindings and update checking.
+Baqueano supports a configuration file to customize its behavior, including key bindings and update checking.
 
 **Configuration File Location:**
-- **Linux/macOS**: `~/.config/sshm/config.json`
-- **Windows**: `%APPDATA%\sshm\config.json`
+- **Linux/macOS**: `~/.config/baqueano/config.json`
+- **Windows**: `%APPDATA%\baqueano\config.json`
 
 **Example Configuration:**
 ```json
@@ -796,10 +796,10 @@ SSHM supports a configuration file to customize its behavior, including key bind
 If you frequently press ESC accidentally causing the application to quit, set `disable_esc_quit` to `true`. This will disable ESC as a quit key while preserving all other functionality.
 
 **For Air-gapped Machines:**
-If SSHM is slow to start due to DNS timeouts when reaching GitHub, set `check_for_updates` to `false`. You can also use the `--no-update-check` CLI flag for a one-time override without editing the config file.
+If Baqueano is slow to start due to DNS timeouts when reaching GitHub, set `check_for_updates` to `false`. You can also use the `--no-update-check` CLI flag for a one-time override without editing the config file.
 
 **Default Configuration:**
-If no configuration file exists, SSHM will automatically create one with default settings that maintain backward compatibility.
+If no configuration file exists, Baqueano will automatically create one with default settings that maintain backward compatibility.
 
 ## Development
 
@@ -812,24 +812,24 @@ If no configuration file exists, SSHM will automatically create one with default
 
 ```bash
 # Clone the repository
-git clone https://github.com/Nicozilabe/sshm.git
-cd sshm
+git clone https://github.com/Nicozilabe/baqueano.git
+cd baq
 
 # Build the binary
-go build -o sshm .
+go build -o baq .
 
 # Run
-./sshm
+./baq
 ```
 
-To make the experimental `sshm drive` commands work without being prompted for
+To make the experimental `baq drive` commands work without being prompted for
 credentials, build with the bundled script, which embeds the OAuth client from a
 gitignored `.env`:
 
 ```bash
 cp .env.example .env   # then fill in your Google OAuth client id/secret
-./scripts/build.sh     # macOS/Linux       -> dist/sshm
-scripts\build.cmd      # Windows (cmd/PS)  -> dist\sshm.exe
+./scripts/build.sh     # macOS/Linux       -> dist/baq
+scripts\build.cmd      # Windows (cmd/PS)  -> dist\baq.exe
 # or, if you have make:
 make build
 ```
@@ -839,13 +839,13 @@ execution policy blocks plain `.ps1` files; it runs the same script with
 `-ExecutionPolicy Bypass`. You can also run `scripts/build.ps1` directly via
 `powershell -ExecutionPolicy Bypass -File scripts/build.ps1`.
 
-A plain `go build` works too; `sshm drive login` will simply ask for the
+A plain `go build` works too; `baq drive login` will simply ask for the
 credentials the first time.
 
 ### Project Structure
 
 ```
-sshm/
+baq/
 ├── main.go             # Application entry point
 ├── cmd/                # CLI commands (Cobra)
 │   ├── root.go         # Root command and interactive mode
@@ -881,7 +881,7 @@ sshm/
 │       └── ssh.go      # SSH config validation
 ├── images/             # Documentation assets
 │   ├── logo.png        # Project logo
-│   └── sshm.gif        # Demo animation
+│   └── baq.gif        # Demo animation
 ├── install/            # Installation scripts
 │   ├── unix.sh              # Unix/Linux/macOS installer
 │   ├── windows.ps1          # Windows installer
@@ -912,12 +912,12 @@ Automated releases are built for multiple platforms:
 
 | Platform | Architecture | Download |
 |----------|-------------|----------|
-| Linux | AMD64 | [sshm_Linux_x86_64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_x86_64.tar.gz) |
-| Linux | ARM64 | [sshm_Linux_arm64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_arm64.tar.gz) |
-| macOS | Intel | [sshm_Darwin_x86_64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_x86_64.tar.gz) |
-| macOS | Apple Silicon | [sshm_Darwin_arm64.tar.gz](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_arm64.tar.gz) |
-| Windows | AMD64 | [sshm_Windows_x86_64.zip](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip) |
-| Windows | ARM64 | [sshm_Windows_arm64.zip](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_arm64.zip) |
+| Linux | AMD64 | [baqueano_Linux_x86_64.tar.gz](https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Linux_x86_64.tar.gz) |
+| Linux | ARM64 | [baqueano_Linux_arm64.tar.gz](https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Linux_arm64.tar.gz) |
+| macOS | Intel | [baqueano_Darwin_x86_64.tar.gz](https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Darwin_x86_64.tar.gz) |
+| macOS | Apple Silicon | [baqueano_Darwin_arm64.tar.gz](https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Darwin_arm64.tar.gz) |
+| Windows | AMD64 | [baqueano_Windows_x86_64.zip](https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Windows_x86_64.zip) |
+| Windows | ARM64 | [baqueano_Windows_arm64.zip](https://github.com/Nicozilabe/baqueano/releases/latest/download/baqueano_Windows_arm64.zip) |
 
 ## Contributing
 
@@ -937,7 +937,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [Guillaume Archambault (@Gu1llaum-3)](https://github.com/Gu1llaum-3) for the original [sshm](https://github.com/Gu1llaum-3/sshm) project this fork is based on
+- [Guillaume Archambault (@Gu1llaum-3)](https://github.com/Gu1llaum-3) for the original project this fork is based on
 - [Charm](https://charm.sh/) for the amazing TUI libraries
 - [Cobra](https://cobra.dev/) for the excellent CLI framework
 - [@yimeng](https://github.com/yimeng) for contributing SSH Include directive support

@@ -7,8 +7,8 @@ import (
 )
 
 func TestRootCommand(t *testing.T) {
-	if RootCmd.Use != "sshm [host] [command...]" {
-		t.Errorf("Expected Use 'sshm [host] [command...]', got '%s'", RootCmd.Use)
+	if RootCmd.Use != "baq [host] [command...]" {
+		t.Errorf("Expected Use 'baq [host] [command...]', got '%s'", RootCmd.Use)
 	}
 
 	if RootCmd.Short != "SSH Manager - A modern SSH connection manager" {
