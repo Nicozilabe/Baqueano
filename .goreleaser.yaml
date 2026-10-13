@@ -81,7 +81,7 @@ changelog:
 release:
   github:
     owner: Nicozilabe
-    name: sshm
+    name: Baqueano
   prerelease: auto
   draft: false
   replace_existing_draft: true
