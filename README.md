@@ -812,11 +812,16 @@ gitignored `.env`:
 
 ```bash
 cp .env.example .env   # then fill in your Google OAuth client id/secret
-./scripts/build.sh     # macOS/Linux   -> dist/sshm
-pwsh scripts/build.ps1 # Windows       -> dist\sshm.exe
+./scripts/build.sh     # macOS/Linux       -> dist/sshm
+scripts\build.cmd      # Windows (cmd/PS)  -> dist\sshm.exe
 # or, if you have make:
 make build
 ```
+
+On Windows, `scripts\build.cmd` is recommended because the default PowerShell
+execution policy blocks plain `.ps1` files; it runs the same script with
+`-ExecutionPolicy Bypass`. You can also run `scripts/build.ps1` directly via
+`powershell -ExecutionPolicy Bypass -File scripts/build.ps1`.
 
 A plain `go build` works too; `sshm drive login` will simply ask for the
 credentials the first time.
