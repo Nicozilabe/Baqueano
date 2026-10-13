@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — SSHM</title>
+  <meta name="description" content="Privacy Policy for SSHM, an interactive SSH manager for the terminal, including how the optional Google Drive sync accesses and uses your data.">
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="brand" href="index.html"><img src="logo.png" alt="SSHM logo" class="brand-logo"><span>SSHM</span></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#install">Install</a>
+        <a href="https://github.com/Nicozilabe/sshm">GitHub</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <article class="doc">
+        <h1>Privacy Policy</h1>
+        <p class="meta">Last updated: October 12, 2026</p>
+
+        <p>This Privacy Policy explains how <strong>SSHM</strong> ("the app", "we", "us")
+          handles information. SSHM is a command-line SSH manager distributed as an
+          open-source project at
+          <a href="https://github.com/Nicozilabe/sshm">github.com/Nicozilabe/sshm</a>.
+          It runs entirely on your own machine.</p>
+
+        <div class="note">
+          In short: SSHM does not operate any servers, does not collect telemetry or
+          analytics, and does not send your data to us or to any third party. Any data
+          you create stays on your device. If you enable the optional Google Drive sync,
+          your data is stored only in your own Google Drive account.
+        </div>
+
+        <h2>1. Data stored on your device</h2>
+        <p>SSHM works with your standard OpenSSH configuration files. Depending on how
+          you use it, the following is stored locally on your computer, under your user
+          account:</p>
+        <ul>
+          <li>Your SSH configuration (for example <code>~/.ssh/config</code> or a custom
+            file you choose), which you manage through the app;</li>
+          <li>Connection history (last-connected timestamps) and port-forwarding history;</li>
+          <li>Automatic backups of your SSH configuration files made before changes;</li>
+          <li>An application settings file (<code>config.json</code>);</li>
+          <li>If you use Google Drive sync, an OAuth token used to access your Drive
+            (see section 3), stored locally with restricted file permissions.</li>
+        </ul>
+        <p>This data never leaves your device except as described in sections 3 and 5
+          below.</p>
+
+        <h2>2. Data we collect</h2>
+        <p><strong>We do not collect, receive, or have access to any of your data.</strong>
+          SSHM has no backend service, no account system, and no analytics or tracking.
+          We cannot see your hosts, your configurations, your usage, or your Google
+          account.</p>
+
+        <h2>3. Google Drive sync (optional)</h2>
+        <p>SSHM offers an optional feature to synchronize your SSH host list across
+          machines using your own Google Drive. This feature is off unless you explicitly
+          authorize it with the <code>sshm drive login</code> command.</p>
+
+        <p><strong>Scope used.</strong> When you enable this feature, SSHM requests a
+          single Google OAuth scope:</p>
+        <ul>
+          <li><code>https://www.googleapis.com/auth/drive.appdata</code> — "View and
+            manage the app's own configuration data in your Google Drive".</li>
+        </ul>
+        <p>This scope grants access only to a private, application-specific data folder
+          (<em>appDataFolder</em>) that belongs exclusively to SSHM within your Drive. It
+          does <strong>not</strong> grant access to any of your other files, folders,
+          documents, or metadata.</p>
+
+        <p><strong>What is stored in Google Drive.</strong> Only the host definitions
+          derived from your SSH configuration (for example host names, hostnames, users,
+          ports, identity-file <em>paths</em>, jump hosts and options) are stored in that
+          folder so they can be synced to your other machines. <strong>Private keys and
+          any file contents other than your host definitions are never uploaded.</strong></p>
+
+        <p><strong>How Google user data is used.</strong> Data accessed through Google
+          APIs is used solely to provide and improve the sync feature you requested
+          (uploading, downloading, and merging your host list). It is not used for
+          advertising, profiling, or any other purpose.</p>
+
+        <p><strong>Storage and transmission.</strong> The data is stored in your own
+          Google Drive account under Google's terms, and is transmitted directly between
+          your machine and Google's servers. It does not pass through, and is not stored
+          on, any server operated by us.</p>
+
+        <p><strong>Revoking access.</strong> You can revoke SSHM's access at any time from
+          your Google Account security settings
+          (<a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>),
+          and you can delete the local token file to remove the authorization from your
+          device.</p>
+
+        <h2>4. Limited Use disclosure</h2>
+        <p>SSHM's use and transfer to any other app of information received from Google
+          APIs will adhere to the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy">Google
+          API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+        <h2>5. Update check</h2>
+        <p>On startup, SSHM may check whether a newer version is available by querying the
+          public GitHub Releases API. This request contains no personal data and is made
+          directly from your machine to GitHub. You can disable it at any time with the
+          <code>--no-update-check</code> flag or the <code>check_for_updates</code> setting
+          in <code>config.json</code>.</p>
+
+        <h2>6. Sharing and selling</h2>
+        <p>We do not sell, rent, trade, or otherwise share your data with third parties.
+          We do not use your data for advertising or to determine credit-worthiness or for
+          lending purposes.</p>
+
+        <h2>7. Data retention and deletion</h2>
+        <p>Because we never receive your data, there is nothing for us to retain or
+          delete. You remain in full control of all data created by SSHM, which lives on
+          your device and, if you enable Drive sync, in your own Google Drive account. You
+          can delete local data by removing the relevant files, and Drive data by deleting
+          the app's data or revoking access as described above.</p>
+
+        <h2>8. Children's privacy</h2>
+        <p>SSHM is a developer tool and is not directed at children. We do not knowingly
+          collect information from anyone, including children.</p>
+
+        <h2>9. Changes to this policy</h2>
+        <p>We may update this Privacy Policy from time to time. Changes will be reflected
+          by updating the "Last updated" date above and committing the revised page to the
+          project repository. Continued use of the app after changes take effect
+          constitutes acceptance of the updated policy.</p>
+
+        <h2>10. Contact</h2>
+        <p>For questions about this Privacy Policy or SSHM's data practices, open an issue
+          at
+          <a href="https://github.com/Nicozilabe/sshm/issues">github.com/Nicozilabe/sshm/issues</a>.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div>
+        SSHM — fork maintained by <a href="https://github.com/Nicozilabe">Nicozilabe</a>.
+        Licensed under the MIT License.
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

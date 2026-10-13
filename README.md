@@ -15,6 +15,8 @@
 
 > **A modern, interactive SSH Manager for your terminal**
 
+> **Website:** [nicozilabe.github.io/sshm](https://nicozilabe.github.io/sshm/) · [Privacy Policy](https://nicozilabe.github.io/sshm/privacy.html) · [Terms of Use](https://nicozilabe.github.io/sshm/terms.html)
+
 SSHM is a beautiful command-line tool that transforms how you manage and connect to your SSH hosts. Built with Go and featuring an intuitive TUI interface, it makes SSH connection management effortless and enjoyable.
 
 <p align="center">
