@@ -65,7 +65,7 @@ func (m Model) renderListView() string {
 			m.updateInfo.LatestVer)
 
 		updateStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("10")). // Green color
+			Foreground(lipgloss.Color(PrimaryColor)). // Accent green
 			Bold(true).
 			Align(lipgloss.Center) // Center the notification
 
@@ -75,12 +75,12 @@ func (m Model) renderListView() string {
 	// Add error message if there's one to show
 	if m.showingError && m.errorMessage != "" {
 		errorStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("9")). // Red color
-			Background(lipgloss.Color("1")). // Dark red background
+			Foreground(lipgloss.Color(ErrorColor)). // Red color
+			Background(lipgloss.Color(SurfaceColor)).
 			Bold(true).
 			Padding(0, 1).
 			Border(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("9")).
+			BorderForeground(lipgloss.Color(ErrorColor)).
 			Align(lipgloss.Center)
 
 		components = append(components, errorStyle.Render("❌ "+m.errorMessage))
@@ -91,7 +91,7 @@ func (m Model) renderListView() string {
 		frames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 		spinner := frames[m.spinnerFrame%len(frames)]
 		connectStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("13")).
+			Foreground(lipgloss.Color(LinkColor)).
 			Bold(true).
 			Padding(0, 1)
 
@@ -101,7 +101,7 @@ func (m Model) renderListView() string {
 	// Add indicator when hidden hosts are shown
 	if m.showHidden {
 		hiddenBannerStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("11")).
+			Foreground(lipgloss.Color(LinkColor)).
 			Bold(true)
 		components = append(components, hiddenBannerStyle.Render("  [showing hidden hosts — press H to hide]"))
 	}
@@ -174,10 +174,10 @@ func (m Model) renderDeleteConfirmation() string {
 	help := "Enter: confirm • Esc: cancel"
 
 	// Individual styles (do not affect width via internal centering)
-	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("196"))
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(ErrorColor))
 	questionStyle := lipgloss.NewStyle()
-	actionStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("203"))
-	helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
+	actionStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(TextDimColor))
+	helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(TextDimColor))
 
 	lines := []string{
 		titleStyle.Render(title),
@@ -208,7 +208,7 @@ func (m Model) renderDeleteConfirmation() string {
 	// Container style: wider horizontal padding, stable border
 	box := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("196")).
+		BorderForeground(lipgloss.Color(ErrorColor)).
 		PaddingTop(1).PaddingBottom(1).PaddingLeft(2).PaddingRight(2).
 		Width(maxw + 4) // +4 = internal margin (2 spaces of left/right padding)
 
@@ -231,13 +231,13 @@ func (m Model) renderUpdateNotification() string {
 		message += fmt.Sprintf(" • View release: %s", m.updateInfo.ReleaseURL)
 	}
 
-	// Style the notification with a bright color to make it stand out
+	// Style the notification with the accent color to make it stand out
 	notificationStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#00FF00")). // Bright green
+		Foreground(lipgloss.Color(PrimaryColor)). // Accent green
 		Bold(true).
 		Padding(0, 1).
 		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("#00AA00")) // Darker green border
+		BorderForeground(lipgloss.Color(PrimaryDimColor)) // Darker accent border
 
 	return notificationStyle.Render(message)
 }

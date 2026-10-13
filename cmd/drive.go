@@ -92,7 +92,7 @@ before it is overwritten.`,
 		}
 
 		out := cmd.OutOrStdout()
-		fmt.Fprintf(out, "Merged: %d local, %d remote → %d added, %d conflicts (local kept)\n",
+		fmt.Fprintf(out, "Merged: %d local, %d remote - %d added, %d conflicts (local kept)\n",
 			res.Stats.Local, res.Stats.Remote, res.Stats.Added, res.Stats.Conflict)
 
 		if driveSyncDryRun {

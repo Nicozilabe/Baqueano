@@ -2,15 +2,29 @@ package ui
 
 import "github.com/charmbracelet/lipgloss"
 
-// Theme colors
+// Theme colors - aligned with the project website palette (docs/styles.css)
 var (
-	// Primary interface color - easily modifiable
-	PrimaryColor = "#00ADD8" // Official Go logo blue color
+	// Primary interface color - website accent (green)
+	PrimaryColor = "#4ade80" // flag: --accent
+	// PrimaryDimColor is the darker accent, used for borders and hover states
+	PrimaryDimColor = "#22c55e" // flag: --accent-dim
 
-	// Secondary colors
-	SecondaryColor = "240" // Gray
-	ErrorColor     = "1"   // Red
-	SuccessColor   = "36"  // Green (for reference if needed)
+	// Link / highlight color
+	LinkColor = "#7dd3fc" // flag: --link
+
+	// Foreground colors
+	TextColor    = "#e6edf3" // flag: --text
+	TextDimColor = "#9fb0c0" // flag: --text-dim
+
+	// Surface and border colors
+	SurfaceColor  = "#111823" // flag: --bg-soft
+	ElevatedColor = "#161f2c" // flag: --bg-elev
+	BorderColor   = "#232f3f" // flag: --border
+
+	// Semantic colors
+	SecondaryColor = TextDimColor // Gray (dim text)
+	ErrorColor     = "#f87171"    // Red
+	SuccessColor   = PrimaryColor // Green
 )
 
 // Styles struct centralizes all lipgloss styles
@@ -81,7 +95,7 @@ func NewStyles(width int) Styles {
 
 		// Style for selected items
 		Selected: lipgloss.NewStyle().
-			Foreground(lipgloss.Color("229")).
+			Foreground(lipgloss.Color("#0b0f14")).
 			Background(lipgloss.Color(PrimaryColor)).
 			Bold(false),
 
@@ -105,7 +119,7 @@ func NewStyles(width int) Styles {
 
 		// Form styles
 		FormTitle: lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFFDF5")).
+			Foreground(lipgloss.Color("#0b0f14")).
 			Background(lipgloss.Color(PrimaryColor)).
 			Padding(0, 1),
 
@@ -113,7 +127,7 @@ func NewStyles(width int) Styles {
 			Foreground(lipgloss.Color(PrimaryColor)),
 
 		FormHelp: lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#626262")),
+			Foreground(lipgloss.Color(TextDimColor)),
 
 		FormContainer: lipgloss.NewStyle().
 			BorderStyle(lipgloss.RoundedBorder()).

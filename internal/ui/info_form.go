@@ -107,17 +107,17 @@ func (m *infoFormModel) View() string {
 		// Label style
 		labelStyle := lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("39")). // Bright blue
+			Foreground(lipgloss.Color(LinkColor)). // Link blue
 			Width(15).
 			AlignHorizontal(lipgloss.Right)
 
 		// Value style
 		valueStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("255")) // White
+			Foreground(lipgloss.Color(TextColor)) // Default text
 
 		// If value is empty or default, use a muted style
 		if section.value == "Not set" || section.value == "22" && section.label == "Port" {
-			valueStyle = valueStyle.Foreground(lipgloss.Color("243")) // Gray
+			valueStyle = valueStyle.Foreground(lipgloss.Color(TextDimColor)) // Dim
 		}
 
 		line := lipgloss.JoinHorizontal(
@@ -134,14 +134,14 @@ func (m *infoFormModel) View() string {
 
 	// Action instructions
 	helpStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("243")).
+		Foreground(lipgloss.Color(TextDimColor)).
 		Italic(true)
 
 	b.WriteString(helpStyle.Render("Actions:"))
 	b.WriteString("\n")
 
 	actionStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("120")). // Green
+		Foreground(lipgloss.Color(PrimaryColor)). // Accent green
 		Bold(true)
 
 	b.WriteString("  ")
@@ -158,7 +158,7 @@ func (m *infoFormModel) View() string {
 
 	borderStyle := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("39")).
+		BorderForeground(lipgloss.Color(LinkColor)).
 		Padding(1).
 		Margin(1)
 
