@@ -458,17 +458,15 @@ Just authorize once:
 sshm drive login
 ```
 
-Official builds already ship with an embedded OAuth client, so this opens the
-browser to finish authorization — no ids to enter.
+sshm ships with a built-in OAuth client (compiled into the binary), so this
+opens the browser to finish authorization — no ids to enter, whether you use an
+official release or build from source yourself.
 
 <details>
-<summary>Building from source / using your own OAuth client</summary>
+<summary>Using your own OAuth client (optional)</summary>
 
-If you build sshm yourself (no embedded client), `sshm drive login` asks for the
-**Client ID** and **Client Secret** of an OAuth client of type **Desktop app**
-(the secret is hidden) and saves them to `<config-dir>/drive_client.json` for
-later commands. You can also provide them up front, either as environment
-variables:
+To use your own client instead of the embedded one, provide it either as
+environment variables:
 
 ```bash
 export SSHM_GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
@@ -487,10 +485,12 @@ Precedence: env vars > `drive_client.json` > embedded client.
 
 </details>
 
-> **Maintainers:** to embed the client into releases, set the repo secrets
-> `SSHM_GOOGLE_CLIENT_ID` and `SSHM_GOOGLE_CLIENT_SECRET`; GoReleaser injects
-> them via `-ldflags`. Desktop-app client secrets are not treated as
-> confidential by Google — they ship inside every installed app.
+> **Maintainers:** the default client lives in `internal/drive/builtin.go`
+> (committed, so local builds work too). Official releases can override it
+> without editing code by setting the repo secrets `SSHM_GOOGLE_CLIENT_ID` and
+> `SSHM_GOOGLE_CLIENT_SECRET`, which GoReleaser injects via `-ldflags`.
+> Desktop-app client secrets are not treated as confidential by Google — they
+> ship inside every installed app.
 
 **Everyday use**
 

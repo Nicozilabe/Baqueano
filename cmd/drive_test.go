@@ -94,28 +94,27 @@ func TestResolveLoginCredentialsUsesFlagsAndSaves(t *testing.T) {
 	}
 }
 
-func TestResolveLoginCredentialsPromptsWhenMissing(t *testing.T) {
+func TestResolveLoginCredentialsUsesSavedFileWithoutPrompting(t *testing.T) {
 	isolateDriveConfig(t)
 
 	origID, origSecret := driveLoginClientID, driveLoginClientSecret
 	t.Cleanup(func() { driveLoginClientID, driveLoginClientSecret = origID, origSecret })
 	driveLoginClientID, driveLoginClientSecret = "", ""
 
+	if err := drive.SaveCredentials(drive.Credentials{ClientID: "file-id", ClientSecret: "file-secret"}); err != nil {
+		t.Fatalf("SaveCredentials: %v", err)
+	}
+
 	var out bytes.Buffer
-	creds, err := resolveLoginCredentials(newPromptCmd("p-id\np-secret\n", &out))
+	creds, err := resolveLoginCredentials(newPromptCmd("", &out))
 	if err != nil {
 		t.Fatalf("resolveLoginCredentials: %v", err)
 	}
-	if creds.ClientID != "p-id" || creds.ClientSecret != "p-secret" {
-		t.Errorf("credentials = %+v, want the prompted values", creds)
+	if creds.ClientID != "file-id" || creds.ClientSecret != "file-secret" {
+		t.Errorf("credentials = %+v, want the saved file values", creds)
 	}
-
-	saved, err := drive.LoadCredentials()
-	if err != nil {
-		t.Fatalf("LoadCredentials after prompt save: %v", err)
-	}
-	if saved.ClientID != "p-id" {
-		t.Errorf("saved client id = %q, want p-id", saved.ClientID)
+	if strings.Contains(out.String(), "Client ID:") {
+		t.Errorf("should not prompt when credentials are already available:\n%s", out.String())
 	}
 }
 

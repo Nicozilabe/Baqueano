@@ -36,15 +36,6 @@ type Credentials struct {
 	ClientSecret string `json:"client_secret"`
 }
 
-// builtinClientID/builtinClientSecret hold the app's own OAuth client so that
-// users of official builds never have to create one. They are injected at
-// release time with -ldflags "-X"; desktop-app client secrets are not treated
-// as confidential by Google (they ship inside every installed app).
-var (
-	builtinClientID     string
-	builtinClientSecret string
-)
-
 // storedToken is the on-disk representation of an oauth2.Token.
 type storedToken struct {
 	AccessToken  string    `json:"access_token"`
