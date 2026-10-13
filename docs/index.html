@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SSHM — Interactive SSH Manager for your terminal</title>
+  <meta name="description" content="SSHM is a modern, interactive SSH manager for the terminal. Manage and connect to your SSH hosts with a beautiful TUI, including optional Google Drive sync of your host list.">
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:title" content="SSHM — Interactive SSH Manager">
+  <meta property="og:description" content="A modern, interactive SSH manager for your terminal, with optional Google Drive sync.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="logo.png">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="logo.png" alt="SSHM logo">
+        <span>SSHM</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/Nicozilabe/sshm/releases">Releases</a>
+        <a href="https://github.com/Nicozilabe/sshm">GitHub</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <section class="hero">
+        <img class="hero-logo" src="logo.png" alt="SSHM logo">
+        <h1>SSHM</h1>
+        <p class="tagline">A modern, interactive <strong>SSH Manager</strong> for your terminal.
+          Manage, organize and connect to your SSH hosts with a beautiful TUI.</p>
+        <div class="buttons">
+          <a class="btn primary" href="https://github.com/Nicozilabe/sshm/releases/latest">Download</a>
+          <a class="btn" href="https://github.com/Nicozilabe/sshm">View on GitHub</a>
+        </div>
+      </section>
+
+      <section id="demo">
+        <div class="terminal">
+          <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <pre><span class="comment"># launch the interactive manager</span>
+<span class="prompt">$</span> sshm
+
+<span class="comment"># connect straight to a host</span>
+<span class="prompt">$</span> sshm prod-server
+
+<span class="comment"># run a command remotely</span>
+<span class="prompt">$</span> sshm prod-server uptime
+
+<span class="comment"># sync your host list across machines (optional)</span>
+<span class="prompt">$</span> sshm drive sync</pre>
+        </div>
+      </section>
+
+      <section id="features">
+        <h2>Features</h2>
+        <div class="grid">
+          <div class="card"><h3>Beautiful TUI</h3><p>Navigate, search and connect to your hosts from an intuitive terminal interface.</p></div>
+          <div class="card"><h3>Port forwarding</h3><p>Set up Local, Remote and Dynamic (SOCKS) forwarding with guided forms and history.</p></div>
+          <div class="card"><h3>Works with ~/.ssh/config</span></h3><p>Reads and writes your standard SSH config, with automatic backups and validation.</p></div>
+          <div class="card"><h3>SSH Include support</h3><p>Organize hosts across multiple files and move hosts between them.</p></div>
+          <div class="hcard card"><h3>Optional Google Drive sync</h3><p>Keep your host list in sync across machines through your own Google Drive. Nothing is sent to our servers.</p></div>
+          <div class="card"><h3>Cross-platform</h3><p>Single binary for Linux, macOS (Intel &amp; Apple Silicon) and Windows.</p></div>
+        </div>
+      </section>
+
+      <section id="install">
+        <h2>Install</h2>
+
+        <div class="step">
+          <h3>Unix / Linux / macOS</h3>
+          <pre class="copy">curl -sSL https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/unix.sh | bash</pre>
+        </div>
+
+        <div class="step">
+          <h3>Windows (PowerShell)</h3>
+          <pre class="copy">irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows.ps1 | iex</pre>
+        </div>
+
+        <p>Or download a prebuilt binary for your platform from the
+          <a href="https://github.com/Nicozilabe/sshm/releases/latest">latest release</a>.</p>
+      </section>
+
+      <section id="downloads">
+        <h2>Downloads</h2>
+        <table>
+          <thead>
+            <tr><th>Platform</th><th>Architecture</th><th>Download</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Linux</td><td>AMD64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_x86_64.tar.gz">sshm_Linux_x86_64.tar.gz</a></td></tr>
+            <tr><td>Linux</td><td>ARM64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Linux_arm64.tar.gz">sshm_Linux_arm64.tar.gz</a></td></tr>
+            <tr><td>macOS</td><td>Intel</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_x86_64.tar.gz">sshm_Darwin_x86_64.tar.gz</a></td></tr>
+            <tr><td>macOS</td><td>Apple Silicon</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Darwin_arm64.tar.gz">sshm_Darwin_arm64.tar.gz</a></td></tr>
+            <tr><td>Windows</td><td>AMD64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip">sshm_Windows_x86_64.zip</a></td></tr>
+            <tr><td>Windows</td><td>ARM64</td><td><a href="https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_arm64.zip">sshm_Windows_arm64.zip</a></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="drive">
+        <h2>Google Drive sync</h2>
+        <p>SSHM can keep your host list in sync across machines using your own Google
+          Drive. The data is stored in a private, app-specific folder that only SSHM can
+          access, and it is never sent to any third party. <strong>No private keys are
+          ever uploaded</strong> — only the host definitions from your SSH config.</p>
+        <pre class="copy">sshm drive login   # one-time authorization
+sshm drive sync    # merge local + remote and upload</pre>
+        <p>See the <a href="privacy.html">Privacy Policy</a> for details on how SSHM
+          accesses and uses your Google data.</p>
+      </section>
+    </div>
+  </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div>
+          SSHM — fork maintained by
+          <a href="https://github.com/Nicozilabe">Nicozilabe</a>.
+          Originally created by
+          <a href="https://github.com/Gu1llaum-3">Guillaume Archambault</a>.
+          Licensed under the MIT License.
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Use</a>
+          <a href="https://github.com/Nicozilabe/sshm">GitHub</a>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>
