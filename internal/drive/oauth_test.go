@@ -125,3 +125,59 @@ func TestSaveCredentialsFilePermissions(t *testing.T) {
 		t.Errorf("credentials file mode = %o, want 0600", perm)
 	}
 }
+
+// withBuiltin overrides the ldflags-injected builtin credentials for a test.
+func withBuiltin(t *testing.T, id, secret string) {
+	t.Helper()
+	origID, origSecret := builtinClientID, builtinClientSecret
+	t.Cleanup(func() { builtinClientID, builtinClientSecret = origID, origSecret })
+	builtinClientID, builtinClientSecret = id, secret
+}
+
+func TestLoadCredentialsFallsBackToBuiltin(t *testing.T) {
+	isolateConfigDir(t)
+	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
+	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	withBuiltin(t, "builtin-id", "builtin-secret")
+
+	creds, err := LoadCredentials()
+	if err != nil {
+		t.Fatalf("LoadCredentials: %v", err)
+	}
+	if creds.ClientID != "builtin-id" || creds.ClientSecret != "builtin-secret" {
+		t.Errorf("credentials = %+v, want the builtin values", creds)
+	}
+}
+
+func TestLoadCredentialsFileBeatsBuiltin(t *testing.T) {
+	isolateConfigDir(t)
+	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
+	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	withBuiltin(t, "builtin-id", "builtin-secret")
+
+	if err := SaveCredentials(Credentials{ClientID: "file-id", ClientSecret: "file-secret"}); err != nil {
+		t.Fatalf("SaveCredentials: %v", err)
+	}
+	creds, err := LoadCredentials()
+	if err != nil {
+		t.Fatalf("LoadCredentials: %v", err)
+	}
+	if creds.ClientID != "file-id" {
+		t.Errorf("client id = %q, want file-id (file must beat builtin)", creds.ClientID)
+	}
+}
+
+func TestLoadCredentialsEnvBeatsBuiltin(t *testing.T) {
+	isolateConfigDir(t)
+	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "env-id")
+	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "env-secret")
+	withBuiltin(t, "builtin-id", "builtin-secret")
+
+	creds, err := LoadCredentials()
+	if err != nil {
+		t.Fatalf("LoadCredentials: %v", err)
+	}
+	if creds.ClientID != "env-id" {
+		t.Errorf("client id = %q, want env-id (env must beat builtin)", creds.ClientID)
+	}
+}

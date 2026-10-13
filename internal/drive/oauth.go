@@ -36,6 +36,15 @@ type Credentials struct {
 	ClientSecret string `json:"client_secret"`
 }
 
+// builtinClientID/builtinClientSecret hold the app's own OAuth client so that
+// users of official builds never have to create one. They are injected at
+// release time with -ldflags "-X"; desktop-app client secrets are not treated
+// as confidential by Google (they ship inside every installed app).
+var (
+	builtinClientID     string
+	builtinClientSecret string
+)
+
 // storedToken is the on-disk representation of an oauth2.Token.
 type storedToken struct {
 	AccessToken  string    `json:"access_token"`
@@ -62,9 +71,9 @@ func CredentialsPath() (string, error) {
 	return filepath.Join(dir, "drive_client.json"), nil
 }
 
-// LoadCredentials reads the OAuth client credentials from the environment
-// (SSHM_GOOGLE_CLIENT_ID / SSHM_GOOGLE_CLIENT_SECRET) or, failing that, from
-// the per-user credentials file.
+// LoadCredentials returns the OAuth client credentials, in order of
+// precedence: the SSHM_GOOGLE_CLIENT_ID/SECRET env vars, the per-user
+// drive_client.json file, or the credentials baked into official builds.
 func LoadCredentials() (Credentials, error) {
 	if id := os.Getenv("SSHM_GOOGLE_CLIENT_ID"); id != "" {
 		return Credentials{
@@ -78,21 +87,24 @@ func LoadCredentials() (Credentials, error) {
 		return Credentials{}, err
 	}
 	data, err := os.ReadFile(path)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return Credentials{}, fmt.Errorf(
-				"no Google credentials: set SSHM_GOOGLE_CLIENT_ID/SECRET or create %s", path)
+	switch {
+	case err == nil:
+		var creds Credentials
+		if uerr := json.Unmarshal(data, &creds); uerr != nil {
+			return Credentials{}, uerr
 		}
+		if creds.ClientID == "" {
+			return Credentials{}, fmt.Errorf("credentials file %s has no client_id", path)
+		}
+		return creds, nil
+	case !errors.Is(err, os.ErrNotExist):
 		return Credentials{}, err
 	}
-	var creds Credentials
-	if err := json.Unmarshal(data, &creds); err != nil {
-		return Credentials{}, err
+
+	if builtinClientID != "" {
+		return Credentials{ClientID: builtinClientID, ClientSecret: builtinClientSecret}, nil
 	}
-	if creds.ClientID == "" {
-		return Credentials{}, fmt.Errorf("credentials file %s has no client_id", path)
-	}
-	return creds, nil
+	return Credentials{}, fmt.Errorf("no Google credentials: set SSHM_GOOGLE_CLIENT_ID/SECRET, create %s, or use an official sshm build", path)
 }
 
 // SaveCredentials writes the OAuth client credentials to the per-user

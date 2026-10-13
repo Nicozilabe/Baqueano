@@ -33,6 +33,8 @@ builds:
   ldflags:
   - -s -w
   - -X github.com/Gu1llaum-3/sshm/cmd.AppVersion={{.Version}}
+  - -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID={{.Env.SSHM_GOOGLE_CLIENT_ID}}
+  - -X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientSecret={{.Env.SSHM_GOOGLE_CLIENT_SECRET}}
   flags:
   - -trimpath
 
