@@ -3,8 +3,14 @@
 # Version can be overridden via environment variable or command line
 VERSION ?= dev
 
+# Load local build secrets (.env is gitignored). On CI these come from env vars.
+-include .env
+
+# Google Drive OAuth client, embedded only when provided.
+GOOGLE_LDFLAGS := $(if $(SSHM_GOOGLE_CLIENT_ID),-X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID=$(SSHM_GOOGLE_CLIENT_ID)) $(if $(SSHM_GOOGLE_CLIENT_SECRET),-X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientSecret=$(SSHM_GOOGLE_CLIENT_SECRET))
+
 # Go build flags
-LDFLAGS := -s -w -X github.com/Gu1llaum-3/sshm/cmd.AppVersion=$(VERSION)
+LDFLAGS := -s -w -X github.com/Gu1llaum-3/sshm/cmd.AppVersion=$(VERSION) $(GOOGLE_LDFLAGS)
 
 # Build with specific version
 build:

@@ -1,19 +1,19 @@
 package drive
 
-// Default OAuth client, compiled into sshm so that every build works out of
-// the box without the user creating their own Google client - including a
-// plain local `go build` / `go run .`.
+// Default OAuth client, compiled into sshm so that `sshm drive login` works
+// without prompting the user for their own Google client.
 //
-// Fill in the Client ID and Client Secret of a Google Cloud OAuth client of
-// type "Desktop app" (https://console.cloud.google.com/apis/credentials).
+// The values are NOT stored in the repository. They are injected at build time
+// via -ldflags:
 //
-// A desktop-app client secret is NOT treated as confidential by Google: it is
-// expected to ship inside every installed binary, so committing it here is
-// fine. Official releases may still override these values at build time with
+//   - CI / releases: GoReleaser reads the GitHub secrets SSHM_GOOGLE_CLIENT_ID
+//     and SSHM_GOOGLE_CLIENT_SECRET (see .goreleaser.yaml and release.yml).
+//   - Local builds: run `make build`, scripts/build.ps1 or scripts/build.sh,
+//     which read the gitignored .env file (copy .env.example and fill it in).
 //
-//	-ldflags "-X github.com/Gu1llaum-3/sshm/internal/drive.builtinClientID=..."
-//
-// (see .goreleaser.yaml), which wins over the literals below.
+// Desktop-app client secrets are not treated as confidential by Google: they
+// ship inside every installed binary, which is why injecting them at build
+// time is expected.
 var (
 	builtinClientID     = ""
 	builtinClientSecret = ""

@@ -459,8 +459,9 @@ sshm drive login
 ```
 
 sshm ships with a built-in OAuth client (compiled into the binary), so this
-opens the browser to finish authorization — no ids to enter, whether you use an
-official release or build from source yourself.
+opens the browser to finish authorization — no ids to enter. This applies to
+official releases, and to local builds made with the bundled build script or
+`make` (see "Building from source" below).
 
 <details>
 <summary>Using your own OAuth client (optional)</summary>
@@ -485,12 +486,11 @@ Precedence: env vars > `drive_client.json` > embedded client.
 
 </details>
 
-> **Maintainers:** the default client lives in `internal/drive/builtin.go`
-> (committed, so local builds work too). Official releases can override it
-> without editing code by setting the repo secrets `SSHM_GOOGLE_CLIENT_ID` and
-> `SSHM_GOOGLE_CLIENT_SECRET`, which GoReleaser injects via `-ldflags`.
-> Desktop-app client secrets are not treated as confidential by Google — they
-> ship inside every installed app.
+> **Maintainers:** the embedded client is injected at build time from
+> `SSHM_GOOGLE_CLIENT_ID` / `SSHM_GOOGLE_CLIENT_SECRET` — GitHub Actions secrets
+> for releases, or a gitignored `.env` (from `.env.example`) for local builds.
+> Nothing secret is committed. Desktop-app client secrets are not treated as
+> confidential by Google — they ship inside every installed app.
 
 **Everyday use**
 
@@ -805,6 +805,21 @@ go build -o sshm .
 # Run
 ./sshm
 ```
+
+To make the experimental `sshm drive` commands work without being prompted for
+credentials, build with the bundled script, which embeds the OAuth client from a
+gitignored `.env`:
+
+```bash
+cp .env.example .env   # then fill in your Google OAuth client id/secret
+./scripts/build.sh     # macOS/Linux   -> dist/sshm
+pwsh scripts/build.ps1 # Windows       -> dist\sshm.exe
+# or, if you have make:
+make build
+```
+
+A plain `go build` works too; `sshm drive login` will simply ask for the
+credentials the first time.
 
 ### Project Structure
 
