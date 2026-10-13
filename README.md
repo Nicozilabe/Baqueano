@@ -4,14 +4,16 @@
     <img src="images/logo.png" alt="SSHM Logo" width="120" />
 </p>
 
-# 🚀 SSHM - SSH Manager
+# SSHM - SSH Manager
 
 [![Go](https://img.shields.io/badge/Go-1.27+-00ADD8?style=for-the-badge&logo=go)](https://golang.org/)
 [![Release](https://img.shields.io/github/v/release/Nicozilabe/sshm?style=for-the-badge)](https://github.com/Nicozilabe/sshm/releases)
 [![License](https://img.shields.io/github/license/Nicozilabe/sshm?style=for-the-badge)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)](https://github.com/Nicozilabe/sshm/releases)
 
-> **A modern, interactive SSH Manager for your terminal** 🔥
+> **This is a fork** of [Gu1llaum-3/sshm](https://github.com/Gu1llaum-3/sshm), maintained by [Nicozilabe](https://github.com/Nicozilabe). It adds optional Google Drive sync on top of the original project; the original MIT license and attribution are preserved.
+
+> **A modern, interactive SSH Manager for your terminal**
 
 SSHM is a beautiful command-line tool that transforms how you manage and connect to your SSH hosts. Built with Go and featuring an intuitive TUI interface, it makes SSH connection management effortless and enjoyable.
 
@@ -20,36 +22,36 @@ SSHM is a beautiful command-line tool that transforms how you manage and connect
         <img src="images/sshm.gif" alt="Demo SSHM Terminal" width="800" />
     </a>
     <br>
-    <em>🖱️ Click on the image to view in full size</em>
+    <em>Click on the image to view in full size</em>
 </p>
 
-## ✨ Features
+## Features
 
-### 🚀 **Core Capabilities**
-- **🎨 Beautiful TUI Interface** - Navigate your SSH hosts with an elegant, interactive terminal UI
-- **⚡ Quick Connect** - Connect to any host instantly through the TUI or the CLI with `sshm <host>`
-- **🔄 Port Forwarding** - Easy setup for Local, Remote, and Dynamic (SOCKS) forwarding with history persistence
-- **📝 Easy Management** - Add, edit, move, and manage SSH configurations seamlessly
-- **🏷️ Tag Support** - Organize your hosts with custom tags for better categorization; use the special `hidden` tag to exclude hosts from the list while keeping them connectable
-- **🔍 Smart Search** - Find hosts quickly with built-in filtering and search
-- **📝 Connectivity Status** - Color-coded SSH connectivity indicators, checked in the background when the TUI starts and on demand
-- **🔔 Smart Updates** - Automatic version checking with update notifications
-- **📈 Connection History** - Track your SSH connections with last login timestamps
+### **Core Capabilities**
+- **Beautiful TUI Interface** - Navigate your SSH hosts with an elegant, interactive terminal UI
+- **Quick Connect** - Connect to any host instantly through the TUI or the CLI with `sshm <host>`
+- **Port Forwarding** - Easy setup for Local, Remote, and Dynamic (SOCKS) forwarding with history persistence
+- **Easy Management** - Add, edit, move, and manage SSH configurations seamlessly
+- **Tag Support** - Organize your hosts with custom tags for better categorization; use the special `hidden` tag to exclude hosts from the list while keeping them connectable
+- **Smart Search** - Find hosts quickly with built-in filtering and search
+- **Connectivity Status** - Color-coded SSH connectivity indicators, checked in the background when the TUI starts and on demand
+- **Smart Updates** - Automatic version checking with update notifications
+- **Connection History** - Track your SSH connections with last login timestamps
 
-### 🛠️ **Technical Features**
-- **🔒 Secure** - Works directly with your existing `~/.ssh/config` file
-- **📁 Custom Config Support** - Use any SSH configuration file with the `-c` flag
-- **📂 SSH Include Support** - Full support for SSH Include directives to organize configurations across multiple files
-- **⚙️ SSH Options Support** - Add any SSH configuration option through intuitive forms
-- **🔄 Automatic Conversion** - Seamlessly converts between command-line and config formats
-- **🔄 Automatic Backups** - Backup configurations automatically before changes
-- **✅ Validation** - Prevent configuration errors with built-in validation
-- **🔗 ProxyJump/ProxyCommand Support** - Secure connection tunneling through bastion hosts
-- **⌨️ Keyboard Shortcuts** - Power user navigation with vim-like shortcuts
-- **🌐 Cross-platform** - Supports Linux, macOS (Intel & Apple Silicon), and Windows
-- **⚡ Lightweight** - Single binary with no dependencies, zero configuration required
+### **Technical Features**
+- **Secure** - Works directly with your existing `~/.ssh/config` file
+- **Custom Config Support** - Use any SSH configuration file with the `-c` flag
+- **SSH Include Support** - Full support for SSH Include directives to organize configurations across multiple files
+- **SSH Options Support** - Add any SSH configuration option through intuitive forms
+- **Automatic Conversion** - Seamlessly converts between command-line and config formats
+- **Automatic Backups** - Backup configurations automatically before changes
+- **Validation** - Prevent configuration errors with built-in validation
+- **ProxyJump/ProxyCommand Support** - Secure connection tunneling through bastion hosts
+- **Keyboard Shortcuts** - Power user navigation with vim-like shortcuts
+- **Cross-platform** - Supports Linux, macOS (Intel & Apple Silicon), and Windows
+- **Lightweight** - Single binary with no dependencies, zero configuration required
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -83,7 +85,7 @@ Expand-Archive sshm_Windows_x86_64.zip -DestinationPath C:\tools\
 # Add C:\tools to your PATH environment variable
 ```
 
-## 📖 Usage
+## Usage
 
 ### Interactive Mode
 
@@ -114,10 +116,10 @@ sshm
 - `/` or `Tab` - Back to the search
 
 **Status Indicators** (checked when the TUI starts, and again with `p`):
-- 🟢 **Online** - Host is reachable via SSH
-- 🟡 **Connecting** - Currently checking host connectivity
-- 🔴 **Offline** - Host is unreachable or SSH connection failed
-- ⚫ **Unknown** - Connectivity status not yet determined
+- **Online** - Host is reachable via SSH
+- **Connecting** - Currently checking host connectivity
+- **Offline** - Host is unreachable or SSH connection failed
+- **Unknown** - Connectivity status not yet determined
 
 **Sorting & Filtering:**
 - `s` - Switch between sorting modes (name ↔ last login)
@@ -146,7 +148,7 @@ SSHM provides an intuitive interface for setting up SSH port forwarding. Press `
 - **Remote (-R)** - Forward a remote port back to a local host/port
   - Example: Expose local web server on remote host's port `8080`
   - Use case: `ssh -R 8080:localhost:3000 server` → Local app accessible from remote host's port 8080
-  - ⚠️ **Requirements for external access:**
+  - **Requirements for external access:**
     - **SSH Server Config**: Add `GatewayPorts yes` to `/etc/ssh/sshd_config` and restart SSH service
     - **Firewall**: Open the remote port in the server's firewall (`ufw allow 8080` or equivalent)
     - **Port Availability**: Ensure the remote port is not already in use
@@ -155,7 +157,7 @@ SSHM provides an intuitive interface for setting up SSH port forwarding. Press `
 - **Dynamic (-D)** - Create a SOCKS proxy for secure browsing
   - Example: Route web traffic through the SSH connection
   - Use case: `ssh -D 1080 server` → Configure browser to use `localhost:1080` as SOCKS proxy
-  - ⚠️ **Configuration requirements:**
+  - **Configuration requirements:**
     - **Browser Setup**: Configure SOCKS v5 proxy in browser settings
     - **DNS**: Enable "Proxy DNS when using SOCKS v5" for full privacy
     - **Applications**: Only SOCKS-aware applications will use the proxy
@@ -514,7 +516,7 @@ sshm move my-server
 sshm move my-server -c /path/to/custom/ssh_config
 ```
 
-**⚠️ Important Requirements:**
+**Important Requirements:**
 - **SSH Include directives must be present** in your SSH config file (either `~/.ssh/config` or the file specified with `-c`)
 - The config file must contain `Include` statements referencing other SSH configuration files
 - Without Include directives, the move command will display an error message
@@ -549,10 +551,10 @@ Host personal-server
 SSHM features asynchronous SSH connectivity checking that provides visual indicators of host availability:
 
 **Status Indicators:**
-- 🟢 **Online** - SSH connection successful (shows response time)
-- 🟡 **Connecting** - Currently testing connectivity
-- 🔴 **Offline** - SSH connection failed or host unreachable
-- ⚫ **Unknown** - Status not yet determined
+- **Online** - SSH connection successful (shows response time)
+- **Connecting** - Currently testing connectivity
+- **Offline** - SSH connection failed or host unreachable
+- **Unknown** - Status not yet determined
 
 **Features:**
 - **Non-blocking checks** - Status updates happen in the background
@@ -614,7 +616,7 @@ SSHM remembers your port forwarding configurations for easy reuse:
 - Full compatibility with OpenSSH features
 - Preserves file permissions automatically
 
-## 🏗️ Configuration
+## Configuration
 
 SSHM works directly with your standard SSH configuration file (`~/.ssh/config`). It adds special comment tags for enhanced functionality while maintaining full compatibility with standard SSH tools.
 
@@ -780,7 +782,7 @@ If SSHM is slow to start due to DNS timeouts when reaching GitHub, set `check_fo
 **Default Configuration:**
 If no configuration file exists, SSHM will automatically create one with default settings that maintain backward compatibility.
 
-## 🛠️ Development
+## Development
 
 ### Prerequisites
 
@@ -882,7 +884,7 @@ sshm/
 - [Lipgloss](https://github.com/charmbracelet/lipgloss) - Styling
 - [Go Crypto SSH](https://golang.org/x/crypto/ssh) - SSH connectivity checking
 
-## 📦 Releases
+## Releases
 
 Automated releases are built for multiple platforms:
 
@@ -895,7 +897,7 @@ Automated releases are built for multiple platforms:
 | Windows | AMD64 | [sshm_Windows_x86_64.zip](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_x86_64.zip) |
 | Windows | ARM64 | [sshm_Windows_arm64.zip](https://github.com/Nicozilabe/sshm/releases/latest/download/sshm_Windows_arm64.zip) |
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
@@ -907,11 +909,11 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 4. **Push** to the branch (`git push origin feature/amazing-feature`)
 5. **Open** a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Guillaume Archambault (@Gu1llaum-3)](https://github.com/Gu1llaum-3) for the original [sshm](https://github.com/Gu1llaum-3/sshm) project this fork is based on
 - [Charm](https://charm.sh/) for the amazing TUI libraries
@@ -925,8 +927,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Fork maintained by [Nicozilabe](https://github.com/Nicozilabe) — originally created with ❤️ by [Guillaume (@Gu1llaum-3)](https://github.com/Gu1llaum-3)**
+**Fork maintained by [Nicozilabe](https://github.com/Nicozilabe) — originally created by [Guillaume (@Gu1llaum-3)](https://github.com/Gu1llaum-3)**
 
-⭐ **Star this repo if you found it useful!** ⭐
+**Star this repo if you found it useful!**
 
 </div>
