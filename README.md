@@ -19,14 +19,6 @@
 
 Baqueano is a beautiful command-line tool that transforms how you manage and connect to your SSH hosts. Built with Go and featuring an intuitive TUI interface, it makes SSH connection management effortless and enjoyable.
 
-<p align="center">
-    <a href="images/baq.gif" target="_blank">
-        <img src="images/baq.gif" alt="Demo Baqueano Terminal" width="800" />
-    </a>
-    <br>
-    <em>Click on the image to view in full size</em>
-</p>
-
 ## Features
 
 ### **Core Capabilities**
@@ -880,8 +872,7 @@ baq/
 │   └── validation/     # Input validation
 │       └── ssh.go      # SSH config validation
 ├── images/             # Documentation assets
-│   ├── logo.png        # Project logo
-│   └── baq.gif        # Demo animation
+│   └── logo.png        # Project logo
 ├── install/            # Installation scripts
 │   ├── unix.sh              # Unix/Linux/macOS installer
 │   ├── windows.ps1          # Windows installer
