@@ -57,7 +57,10 @@
 <span class="prompt">$</span> baq prod-server uptime
 
 <span class="comment"># sync your host list across machines (optional)</span>
-<span class="prompt">$</span> baq drive sync</pre>
+<span class="prompt">$</span> baq drive sync
+
+<span class="comment"># update to the latest release</span>
+<span class="prompt">$</span> baq update</pre>
         </div>
       </section>
 
@@ -70,6 +73,7 @@
           <div class="card"><h3>SSH Include support</h3><p>Organize hosts across multiple files and move hosts between them.</p></div>
           <div class="hcard card"><h3>Optional Google Drive sync</h3><p>Keep your host list in sync across machines through your own Google Drive. Nothing is sent to our servers.</p></div>
           <div class="card"><h3>Cross-platform</h3><p>Single binary for Linux, macOS (Intel &amp; Apple Silicon) and Windows.</p></div>
+          <div class="card"><h3>Self-update</h3><p>Install the latest release in place with <code>baq update</code> — downloads are verified against the release checksums.</p></div>
         </div>
       </section>
 
@@ -88,6 +92,10 @@
 
         <p>Or download a prebuilt binary for your platform from the
           <a href="https://github.com/Nicozilabe/baqueano/releases/latest">latest release</a>.</p>
+
+        <p>Already installed? Update in place (downloads are verified against the
+          release checksums):</p>
+        <pre class="copy">baq update</pre>
       </section>
 
       <section id="downloads">

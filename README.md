@@ -39,6 +39,7 @@ Baqueano is a beautiful command-line tool that transforms how you manage and con
 - **SSH Options Support** - Add any SSH configuration option through intuitive forms
 - **Automatic Conversion** - Seamlessly converts between command-line and config formats
 - **Automatic Backups** - Backup configurations automatically before changes
+- **Self-Update** - Install the latest release in place with `baq update` (checksum-verified)
 - **Validation** - Prevent configuration errors with built-in validation
 - **ProxyJump/ProxyCommand Support** - Secure connection tunneling through bastion hosts
 - **Keyboard Shortcuts** - Power user navigation with vim-like shortcuts
@@ -298,6 +299,18 @@ baq --version
 
 # Disable automatic update check (useful on air-gapped machines)
 baq --no-update-check
+
+# Update baq to the latest release (downloads, verifies checksums, replaces the binary)
+baq update
+
+# Only check whether a newer version is available
+baq update --check
+
+# Install a specific version (also useful to downgrade)
+baq update --version v2.0.0
+
+# Reinstall even if already on the latest version
+baq update --force
 
 # Show help and available commands
 baq --help
@@ -603,6 +616,20 @@ Via `~/.config/baqueano/config.json` (persistent):
 }
 ```
 
+**Updating from the CLI:**
+
+The startup check only *notifies* you; to actually install the new version use the `update` command:
+
+```bash
+baq update                    # download, verify and install the latest release
+baq update --check            # only report whether an update is available
+baq update --version v2.0.0   # install a specific tag (also to downgrade)
+baq update --force            # reinstall even if already up to date
+baq update --pre              # include pre-releases when resolving the latest
+```
+
+`baq update` selects the archive for your OS and architecture, verifies it against the release `checksums.txt`, and replaces the running binary in place. Restart `baq` afterwards to use the new version. On Windows the current binary is moved aside and cleaned up automatically on the next launch. If baq was installed to a location you cannot write to (e.g. `/usr/local/bin`), re-run the install script or update with the appropriate permissions.
+
 #### Port Forwarding History
 
 Baqueano remembers your port forwarding configurations for easy reuse:
@@ -844,7 +871,8 @@ baq/
 │   ├── add.go          # Add host command
 │   ├── edit.go         # Edit host command
 │   ├── move.go         # Move host command
-│   └── search.go       # Search command
+│   ├── search.go       # Search command
+│   └── update.go       # Self-update command
 ├── internal/
 │   ├── config/         # SSH configuration management
 │   │   └── ssh.go      # Config parsing and manipulation
@@ -856,6 +884,8 @@ baq/
 │   ├── version/        # Version checking and updates
 │   │   ├── version.go  # GitHub release checking and version comparison
 │   │   └── version_test.go # Version parsing and comparison tests
+│   ├── updater/        # Self-update logic
+│   │   └── updater.go  # Download, checksum verification and binary replacement
 │   ├── ui/             # Terminal UI components (Bubble Tea)
 │   │   ├── tui.go      # Main TUI interface and program setup
 │   │   ├── model.go    # Core TUI model and state
