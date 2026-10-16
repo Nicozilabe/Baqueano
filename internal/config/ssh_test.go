@@ -454,7 +454,7 @@ Include *.conf
 	}
 }
 
-func TestBackupConfigToSSHMDirectory(t *testing.T) {
+func TestBackupConfigToBaqueanoDirectory(t *testing.T) {
 	// Create temporary directory for test files
 	tempDir := t.TempDir()
 
@@ -499,9 +499,9 @@ func TestBackupConfigToSSHMDirectory(t *testing.T) {
 	}
 
 	// Verify backup directory was created
-	backupDir, err := GetSSHMBackupDir()
+	backupDir, err := GetBaqueanoBackupDir()
 	if err != nil {
-		t.Fatalf("GetSSHMBackupDir() error = %v", err)
+		t.Fatalf("GetBaqueanoBackupDir() error = %v", err)
 	}
 
 	if _, err := os.Stat(backupDir); os.IsNotExist(err) {

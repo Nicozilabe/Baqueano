@@ -10,7 +10,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// isolateConfigDir redirects the sshm config dir (and the OS config dir on
+// isolateConfigDir redirects the baq config dir (and the OS config dir on
 // Unix) to a throwaway temp dir so token/credential tests never touch the real
 // user config.
 func isolateConfigDir(t *testing.T) {
@@ -22,8 +22,8 @@ func isolateConfigDir(t *testing.T) {
 
 func TestSaveLoadTokenRoundtrip(t *testing.T) {
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 
 	want := &oauth2.Token{
 		AccessToken:  "access-123",
@@ -61,8 +61,8 @@ func TestLoadTokenMissing(t *testing.T) {
 }
 
 func TestLoadCredentialsFromEnv(t *testing.T) {
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "client-id")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "client-secret")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "client-id")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "client-secret")
 
 	creds, err := LoadCredentials()
 	if err != nil {
@@ -75,8 +75,8 @@ func TestLoadCredentialsFromEnv(t *testing.T) {
 
 func TestLoadCredentialsMissing(t *testing.T) {
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 
 	if _, err := LoadCredentials(); err == nil {
 		t.Fatal("LoadCredentials error = nil, want a missing-credentials error")
@@ -85,8 +85,8 @@ func TestLoadCredentialsMissing(t *testing.T) {
 
 func TestSaveLoadCredentialsRoundtrip(t *testing.T) {
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 
 	want := Credentials{ClientID: "cid.apps.googleusercontent.com", ClientSecret: "shh"}
 	if err := SaveCredentials(want); err != nil {
@@ -107,8 +107,8 @@ func TestSaveCredentialsFilePermissions(t *testing.T) {
 		t.Skip("unix file permissions not meaningful on Windows")
 	}
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 
 	if err := SaveCredentials(Credentials{ClientID: "cid", ClientSecret: "s"}); err != nil {
 		t.Fatalf("SaveCredentials: %v", err)
@@ -136,8 +136,8 @@ func withBuiltin(t *testing.T, id, secret string) {
 
 func TestLoadCredentialsFallsBackToBuiltin(t *testing.T) {
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 	withBuiltin(t, "builtin-id", "builtin-secret")
 
 	creds, err := LoadCredentials()
@@ -151,8 +151,8 @@ func TestLoadCredentialsFallsBackToBuiltin(t *testing.T) {
 
 func TestLoadCredentialsFileBeatsBuiltin(t *testing.T) {
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 	withBuiltin(t, "builtin-id", "builtin-secret")
 
 	if err := SaveCredentials(Credentials{ClientID: "file-id", ClientSecret: "file-secret"}); err != nil {
@@ -169,8 +169,8 @@ func TestLoadCredentialsFileBeatsBuiltin(t *testing.T) {
 
 func TestLoadCredentialsEnvBeatsBuiltin(t *testing.T) {
 	isolateConfigDir(t)
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "env-id")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "env-secret")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "env-id")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "env-secret")
 	withBuiltin(t, "builtin-id", "builtin-secret")
 
 	creds, err := LoadCredentials()

@@ -35,7 +35,7 @@ func (s *driveStub) handler(t *testing.T) http.Handler {
 				io.WriteString(w, `{"files":[]}`)
 				return
 			}
-			io.WriteString(w, `{"files":[{"id":"`+s.fileID+`","name":"sshm_config"}]}`)
+			io.WriteString(w, `{"files":[{"id":"`+s.fileID+`","name":"baqueano_config"}]}`)
 
 		case r.Method == http.MethodGet && strings.HasPrefix(r.URL.Path, "/files/"):
 			if r.URL.Query().Get("alt") != "media" {

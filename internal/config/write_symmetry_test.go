@@ -66,7 +66,7 @@ func writeTrickyHost(t *testing.T, set func(*SSHHost, string), value string) str
 	return configFile
 }
 
-// AC-8: a value written by sshm is read back unchanged by sshm
+// AC-8: a value written by baq is read back unchanged by baq
 func TestWrittenValuesAreReadBackUnchanged_AC8(t *testing.T) {
 	for _, field := range writtenFields {
 		for _, tt := range trickyValues {
@@ -81,7 +81,7 @@ func TestWrittenValuesAreReadBackUnchanged_AC8(t *testing.T) {
 	}
 }
 
-// AC-8: a value written by sshm is read back unchanged by the ssh client
+// AC-8: a value written by baq is read back unchanged by the ssh client
 func TestWrittenValuesAreReadBackBySSHClient_AC8(t *testing.T) {
 	for _, field := range writtenFields {
 		for _, tt := range trickyValues {
@@ -106,7 +106,7 @@ func TestWrittenValuesAreReadBackBySSHClient_AC8(t *testing.T) {
 }
 
 // AC-8: OpenSSH takes ProxyJump raw, quotes included, without its trailing
-// comment, so sshm reads and writes it the same way
+// comment, so baq reads and writes it the same way
 func TestProxyJumpIsKeptRaw_AC8(t *testing.T) {
 	t.Run("read", func(t *testing.T) {
 		for line, want := range map[string]string{
@@ -125,13 +125,13 @@ func TestProxyJumpIsKeptRaw_AC8(t *testing.T) {
 		t.Run("round trip/"+value, func(t *testing.T) {
 			configFile := writeTrickyHost(t, func(h *SSHHost, v string) { h.ProxyJump = v }, value)
 			if got := findHost(t, configFile, "h").ProxyJump; got != value {
-				t.Errorf("sshm reads back %q, want %q", got, value)
+				t.Errorf("baq reads back %q, want %q", got, value)
 			}
 			if sshPath == "" {
 				return
 			}
 			// Some OpenSSH versions reject the value even written by hand
-			// (9.6 rejects "a, b"): sshm writes it raw, so there is nothing to compare
+			// (9.6 rejects "a, b"): baq writes it raw, so there is nothing to compare
 			handWritten := filepath.Join(t.TempDir(), "config")
 			writeFile(t, handWritten, "Host h\n    ProxyJump "+value+"\n")
 			if out, err := exec.Command(sshPath, "-F", handWritten, "-G", "h").CombinedOutput(); err != nil {

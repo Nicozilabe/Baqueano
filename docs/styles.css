@@ -1,28 +1,28 @@
 :root {
-  --bg: #0b0f14;
-  --bg-soft: #111823;
-  --bg-elev: #161f2c;
-  --border: #232f3f;
-  --text: #e6edf3;
-  --text-dim: #9fb0c0;
-  --accent: #4ade80;
-  --accent-dim: #22c55e;
-  --link: #7dd3fc;
+  --bg: #0b0d10;
+  --bg-soft: #12151b;
+  --bg-elev: #171b22;
+  --border: #2a3038;
+  --text: #f1ebe1;
+  --text-dim: #a79d8e;
+  --accent: #b9542a;
+  --accent-dim: #9a4423;
+  --link: #e0a56b;
   --max: 960px;
   --radius: 12px;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f7f9fc;
+    --bg: #f7f3ec;
     --bg-soft: #ffffff;
     --bg-elev: #ffffff;
-    --border: #d8e0ea;
-    --text: #0e1726;
-    --text-dim: #5a6b7d;
-    --accent: #16a34a;
-    --accent-dim: #15803d;
-    --link: #0369a1;
+    --border: #e3dacb;
+    --text: #17140f;
+    --text-dim: #6c6152;
+    --accent: #b9542a;
+    --accent-dim: #9a4423;
+    --link: #a2491f;
   }
 }
 
@@ -135,7 +135,7 @@ main { padding-bottom: 4rem; }
 .btn.primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #06240f;
+  color: #f7f3ec;
 }
 .btn.primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); }
 

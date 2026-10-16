@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -141,7 +141,7 @@ func (m *infoFormModel) View() string {
 	b.WriteString("\n")
 
 	actionStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color(PrimaryColor)). // Accent green
+		Foreground(lipgloss.Color(PrimaryColor)). // Accent
 		Bold(true)
 
 	b.WriteString("  ")

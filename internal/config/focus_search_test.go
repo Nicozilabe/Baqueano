@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// useTempConfigDir points the sshm config directory to a temporary one
+// useTempConfigDir points the baq config directory to a temporary one
 func useTempConfigDir(t *testing.T) string {
 	t.Helper()
 	home := t.TempDir()

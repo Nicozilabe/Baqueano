@@ -65,7 +65,7 @@ func (m Model) renderListView() string {
 			m.updateInfo.LatestVer)
 
 		updateStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color(PrimaryColor)). // Accent green
+			Foreground(lipgloss.Color(PrimaryColor)). // Accent
 			Bold(true).
 			Align(lipgloss.Center) // Center the notification
 
@@ -233,7 +233,7 @@ func (m Model) renderUpdateNotification() string {
 
 	// Style the notification with the accent color to make it stand out
 	notificationStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color(PrimaryColor)). // Accent green
+		Foreground(lipgloss.Color(PrimaryColor)). // Accent
 		Bold(true).
 		Padding(0, 1).
 		Border(lipgloss.RoundedBorder()).

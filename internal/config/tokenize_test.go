@@ -88,7 +88,7 @@ func TestSplitConfigLineSkipsBlankLinesAndComments(t *testing.T) {
 	}
 }
 
-// sshm stays lenient where OpenSSH rejects the line (decision of the plan)
+// baq stays lenient where OpenSSH rejects the line (decision of the plan)
 func TestSplitConfigLineIsLenient_AC4(t *testing.T) {
 	tests := []struct {
 		name string

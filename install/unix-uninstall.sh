@@ -1,7 +1,7 @@
 #!/bin/bash
 
 INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
-EXECUTABLE_NAME=sshm
+EXECUTABLE_NAME=baq
 EXECUTABLE_PATH="$INSTALL_DIR/$EXECUTABLE_NAME"
 USE_SUDO="false"
 OS=""
@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 usage() {
-    printf "${PURPLE}SSHM Uninstallation Script${NC}\n\n"
+    printf "${PURPLE}Baqueano Uninstallation Script${NC}\n\n"
     printf "Usage:\n"
     printf "  Default:                     ${GREEN}bash unix-uninstall.sh${NC}\n"
     printf "  Force (no prompts):          ${GREEN}FORCE_UNINSTALL=true bash unix-uninstall.sh${NC}\n"
@@ -23,7 +23,7 @@ usage() {
     printf "  Custom install directory:    ${GREEN}INSTALL_DIR=/opt/bin bash unix-uninstall.sh${NC}\n\n"
     printf "Environment variables:\n"
     printf "  FORCE_UNINSTALL - Skip confirmation prompts (default: false)\n"
-    printf "  PURGE_CONFIG    - Also delete ~/.config/sshm (history, backups, credentials)\n"
+    printf "  PURGE_CONFIG    - Also delete ~/.config/baqueano (history, backups, credentials)\n"
     printf "  INSTALL_DIR     - Installation directory (default: /usr/local/bin)\n\n"
 }
 
@@ -39,22 +39,22 @@ setSystem() {
 runAsRoot() {
     local CMD="$*"
     if [ "$USE_SUDO" = "true" ]; then
-        printf "${PURPLE}We need sudo access to remove SSHM from $INSTALL_DIR ${NC}\n"
+        printf "${PURPLE}We need sudo access to remove Baqueano from $INSTALL_DIR ${NC}\n"
         CMD="sudo $CMD"
     fi
     $CMD
 }
 
-# configDir prints the SSHM configuration directory, mirroring the app logic
+# configDir prints the Baqueano configuration directory, mirroring the app logic
 configDir() {
     if [ -n "$XDG_CONFIG_HOME" ]; then
-        printf "%s" "$XDG_CONFIG_HOME/sshm"
+        printf "%s" "$XDG_CONFIG_HOME/baqueano"
     else
-        printf "%s" "$HOME/.config/sshm"
+        printf "%s" "$HOME/.config/baqueano"
     fi
 }
 
-# resolveBinary finds the installed sshm binary, preferring the configured
+# resolveBinary finds the installed baq binary, preferring the configured
 # INSTALL_DIR and falling back to whatever is on PATH
 resolveBinary() {
     if [ -f "$EXECUTABLE_PATH" ]; then
@@ -73,7 +73,7 @@ resolveBinary() {
 
 uninstall() {
     if ! resolveBinary; then
-        printf "${YELLOW}SSHM does not appear to be installed (checked $INSTALL_DIR and PATH)${NC}\n"
+        printf "${YELLOW}Baqueano does not appear to be installed (checked $INSTALL_DIR and PATH)${NC}\n"
     else
         printf "${YELLOW}Removing binary: $EXECUTABLE_PATH${NC}\n"
         runAsRoot rm -f "$EXECUTABLE_PATH"
@@ -108,7 +108,7 @@ confirm() {
         return 0
     fi
 
-    printf "${YELLOW}Do you want to uninstall SSHM? [y/N]: ${NC}"
+    printf "${YELLOW}Do you want to uninstall Baqueano? [y/N]: ${NC}"
     read -r response
     case "$response" in
         [yY][eE][sS]|[yY]) return 0 ;;
@@ -122,7 +122,7 @@ main() {
         exit 0
     fi
 
-    printf "${PURPLE}Uninstalling SSHM - SSH Connection Manager${NC}\n\n"
+    printf "${PURPLE}Uninstalling Baqueano - SSH Connection Manager${NC}\n\n"
 
     setSystem
 
@@ -133,7 +133,7 @@ main() {
 
     uninstall
 
-    printf "\n${GREEN}✅ SSHM was uninstalled successfully.${NC}\n"
+    printf "\n${GREEN}✅ Baqueano was uninstalled successfully.${NC}\n"
     if [ "$PURGE_CONFIG" != "true" ]; then
         local dir
         dir=$(configDir)

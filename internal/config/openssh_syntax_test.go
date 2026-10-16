@@ -123,7 +123,7 @@ func TestIncludeQuotedPathsAndSeveralPatterns_AC2(t *testing.T) {
 	}
 }
 
-// AC-2: the quick search used by "sshm <host>" finds the same hosts as the parser
+// AC-2: the quick search used by "baq <host>" finds the same hosts as the parser
 func TestQuickSearchFollowsOpenSSHSyntax_AC2(t *testing.T) {
 	tempDir := t.TempDir()
 	spaced := filepath.Join(tempDir, "conf d")
@@ -158,8 +158,8 @@ func TestQuickSearchFollowsOpenSSHSyntax_AC2(t *testing.T) {
 	}
 }
 
-// AC-3: a ProxyCommand written by sshm (as "ProxyCommand=...") is read back as ProxyCommand
-func TestProxyCommandWrittenBySSHMIsReadBack_AC3(t *testing.T) {
+// AC-3: a ProxyCommand written by baq (as "ProxyCommand=...") is read back as ProxyCommand
+func TestProxyCommandWrittenByBaqueanoIsReadBack_AC3(t *testing.T) {
 	for _, command := range []string{"ssh -W %h:%p bastion", "none"} {
 		t.Run(command, func(t *testing.T) {
 			configFile := filepath.Join(t.TempDir(), "config")

@@ -40,7 +40,7 @@ func (m *helpModel) Update(msg tea.Msg) (*helpModel, tea.Cmd) {
 
 func (m *helpModel) View() string {
 	// Title
-	title := m.styles.Header.Render("📖 SSHM - Commands")
+	title := m.styles.Header.Render("📖 Baqueano - Commands")
 
 	// Create two columns of commands for better visual organization
 	leftColumn := lipgloss.JoinVertical(lipgloss.Left,

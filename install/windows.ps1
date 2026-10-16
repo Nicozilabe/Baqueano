@@ -1,10 +1,10 @@
-# SSHM Windows Installation Script
+# Baqueano Windows Installation Script
 # Usage: 
-#   Online:  irm https://raw.githubusercontent.com/Nicozilabe/sshm/main/install/windows.ps1 | iex
-#   Local:   .\install\windows.ps1 -LocalBinary ".\sshm.exe"
+#   Online:  irm https://raw.githubusercontent.com/Nicozilabe/baqueano/main/install/windows.ps1 | iex
+#   Local:   .\install\windows.ps1 -LocalBinary ".\baq.exe"
 
 param(
-    [string]$InstallDir = "$env:LOCALAPPDATA\sshm",
+    [string]$InstallDir = "$env:LOCALAPPDATA\baqueano",
     [switch]$Force = $false,
     [string]$LocalBinary = ""
 )
@@ -25,14 +25,14 @@ function Write-Info { Write-ColorOutput Green $args }
 function Write-Warning { Write-ColorOutput Yellow $args }
 function Write-Error { Write-ColorOutput Red $args }
 
-Write-Info "🚀 Installing SSHM - SSH Manager"
+Write-Info "🚀 Installing Baqueano - SSH Manager"
 Write-Info ""
 
-# Check if SSHM is already installed
-$existingSSHM = Get-Command sshm -ErrorAction SilentlyContinue
-if ($existingSSHM -and -not $Force) {
-    $currentVersion = & sshm --version 2>$null | Select-String "version" | ForEach-Object { $_.ToString().Split()[-1] }
-    Write-Warning "SSHM is already installed (version: $currentVersion)"
+# Check if Baqueano is already installed
+$existingBaqueano = Get-Command baq -ErrorAction SilentlyContinue
+if ($existingBaqueano -and -not $Force) {
+    $currentVersion = & baq --version 2>$null | Select-String "version" | ForEach-Object { $_.ToString().Split()[-1] }
+    Write-Warning "Baqueano is already installed (version: $currentVersion)"
     $response = Read-Host "Do you want to continue with the installation? (y/N)"
     if ($response -ne "y" -and $response -ne "Y") {
         Write-Info "Installation cancelled."
@@ -52,7 +52,7 @@ if ($LocalBinary -ne "") {
     }
     
     Write-Info "Using local binary: $LocalBinary"
-    $targetPath = "$InstallDir\sshm.exe"
+    $targetPath = "$InstallDir\baq.exe"
     
     # Create installation directory
     if (-not (Test-Path $InstallDir)) {
@@ -71,7 +71,7 @@ if ($LocalBinary -ne "") {
     # Get latest version
     Write-Info "Fetching latest version..."
     try {
-        $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/Nicozilabe/sshm/releases/latest"
+        $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/Nicozilabe/baqueano/releases/latest"
         $latestVersion = $latestRelease.tag_name
         Write-Info "Target version: $latestVersion"
     } catch {
@@ -83,9 +83,9 @@ if ($LocalBinary -ne "") {
     # Map architecture to match GoReleaser format
     $goreleaserArch = if ($arch -eq "amd64") { "x86_64" } else { "i386" }
     
-    # GoReleaser format: sshm_Windows_x86_64.zip
-    $fileName = "sshm_Windows_$goreleaserArch.zip"
-    $downloadUrl = "https://github.com/Nicozilabe/sshm/releases/download/$latestVersion/$fileName"
+    # GoReleaser format: baqueano_Windows_x86_64.zip
+    $fileName = "baqueano_Windows_$goreleaserArch.zip"
+    $downloadUrl = "https://github.com/Nicozilabe/baqueano/releases/download/$latestVersion/$fileName"
     $tempFile = "$env:TEMP\$fileName"
 
     Write-Info "Downloading $fileName..."
@@ -97,8 +97,8 @@ if ($LocalBinary -ne "") {
     }
 
     # Verify the downloaded archive against the published checksums
-    $checksumUrl = "https://github.com/Nicozilabe/sshm/releases/download/$latestVersion/checksums.txt"
-    $checksumFile = "$env:TEMP\sshm-checksums.txt"
+    $checksumUrl = "https://github.com/Nicozilabe/baqueano/releases/download/$latestVersion/checksums.txt"
+    $checksumFile = "$env:TEMP\baq-checksums.txt"
 
     Write-Info "Verifying checksum..."
     try {
@@ -136,9 +136,9 @@ if ($LocalBinary -ne "") {
     Write-Info "Extracting..."
     try {
         Expand-Archive -Path $tempFile -DestinationPath $env:TEMP -Force
-        # GoReleaser extracts the binary as just "sshm.exe", not with platform suffix
-        $extractedBinary = "$env:TEMP\sshm.exe"
-        $targetPath = "$InstallDir\sshm.exe"
+        # GoReleaser extracts the binary as just "baq.exe", not with platform suffix
+        $extractedBinary = "$env:TEMP\baq.exe"
+        $targetPath = "$InstallDir\baq.exe"
         
         Move-Item -Path $extractedBinary -Destination $targetPath -Force
     } catch {
@@ -157,12 +157,12 @@ if ($userPath -notlike "*$InstallDir*") {
     Write-Warning "The directory $InstallDir is not in your PATH."
     Write-Info "Adding to user PATH..."
     [Environment]::SetEnvironmentVariable("Path", "$userPath;$InstallDir", "User")
-    Write-Info "Please restart your terminal to use the 'sshm' command."
+    Write-Info "Please restart your terminal to use the 'baq' command."
 }
 
 Write-Info ""
-Write-Info "✅ SSHM successfully installed to: $targetPath"
-Write-Info "You can now use the 'sshm' command!"
+Write-Info "✅ Baqueano successfully installed to: $targetPath"
+Write-Info "You can now use the 'baq' command!"
 
 # Verify installation
 if (Test-Path $targetPath) {

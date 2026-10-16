@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Nicozilabe/sshm/internal/config"
-	"github.com/Nicozilabe/sshm/internal/validation"
+	"github.com/Nicozilabe/baqueano/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/validation"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 )
 
 func TestNewPingManager(t *testing.T) {

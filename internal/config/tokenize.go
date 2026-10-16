@@ -1,5 +1,5 @@
 // Tokenizer for ssh config lines: splits a line into its keyword and
-// arguments the way OpenSSH does, so sshm reads values as ssh reads them.
+// arguments the way OpenSSH does, so baq reads values as ssh reads them.
 
 package config
 
@@ -33,7 +33,7 @@ func isVerbatimKeyword(keyword string) bool {
 //     so Windows paths such as C:\Users\me\id are kept as written;
 //   - a "#" at the start of a word starts a comment that runs to the end of the line.
 //
-// Where OpenSSH rejects the line, sshm stays lenient: an unterminated quote
+// Where OpenSSH rejects the line, baq stays lenient: an unterminated quote
 // keeps the rest of the line.
 func splitConfigLine(line string) (configLine, bool) {
 	s := strings.Trim(line, " \t\r")

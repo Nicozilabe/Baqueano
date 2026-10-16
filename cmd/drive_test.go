@@ -5,20 +5,20 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Nicozilabe/sshm/internal/drive"
+	"github.com/Nicozilabe/baqueano/internal/drive"
 
 	"github.com/spf13/cobra"
 )
 
-// isolateDriveConfig points the sshm config dir at a throwaway temp dir so
+// isolateDriveConfig points the baq config dir at a throwaway temp dir so
 // credential tests never touch the real user config.
 func isolateDriveConfig(t *testing.T) {
 	t.Helper()
 	t.Setenv("APPDATA", t.TempDir())
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("HOME", t.TempDir())
-	t.Setenv("SSHM_GOOGLE_CLIENT_ID", "")
-	t.Setenv("SSHM_GOOGLE_CLIENT_SECRET", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_ID", "")
+	t.Setenv("BAQUEANO_GOOGLE_CLIENT_SECRET", "")
 }
 
 // newPromptCmd returns a command whose stdin/stdout are wired to the given

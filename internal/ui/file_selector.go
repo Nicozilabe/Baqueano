@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 	"path/filepath"
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"

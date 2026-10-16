@@ -134,7 +134,7 @@ func TestValidateIdentityFile(t *testing.T) {
 	}
 
 	// Set up an env var pointing to the valid file's directory for env var tests
-	t.Setenv("TEST_SSHM_DIR", tmpDir)
+	t.Setenv("TEST_BAQUEANO_DIR", tmpDir)
 
 	tests := []struct {
 		name string
@@ -147,9 +147,9 @@ func TestValidateIdentityFile(t *testing.T) {
 		// Skip tilde path test in CI environments where ~/.ssh/id_rsa may not exist
 		// {"tilde path", "~/.ssh/id_rsa", true}, // Will pass if file exists
 		// Environment variable expansion (issue #33)
-		{"env var $VAR/key defined", "$TEST_SSHM_DIR/test_key", true},
-		{"env var ${VAR}/key defined", "${TEST_SSHM_DIR}/test_key", true},
-		{"env var undefined", "$UNDEFINED_SSHM_VAR_XYZ/key", true},
+		{"env var $VAR/key defined", "$TEST_BAQUEANO_DIR/test_key", true},
+		{"env var ${VAR}/key defined", "${TEST_BAQUEANO_DIR}/test_key", true},
+		{"env var undefined", "$UNDEFINED_BAQUEANO_VAR_XYZ/key", true},
 		// SSH tokens
 		{"SSH token %d", "%d/.ssh/id_rsa", true},
 		{"SSH token %h", "%h-key", true},
@@ -180,7 +180,7 @@ func TestValidateHost(t *testing.T) {
 	if err := os.WriteFile(validIdentity, []byte("test"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("TEST_SSHM_HOST_DIR", tmpDir)
+	t.Setenv("TEST_BAQUEANO_HOST_DIR", tmpDir)
 
 	tests := []struct {
 		name     string
@@ -199,7 +199,7 @@ func TestValidateHost(t *testing.T) {
 		{"invalid port", "myserver", "example.com", "99999", "", true},
 		{"invalid identity", "myserver", "example.com", "22", "/nonexistent", true},
 		// Environment variables and SSH tokens in identity (issue #33)
-		{"identity with env var", "myserver", "example.com", "22", "$TEST_SSHM_HOST_DIR/test_key", false},
+		{"identity with env var", "myserver", "example.com", "22", "$TEST_BAQUEANO_HOST_DIR/test_key", false},
 		{"identity with SSH token", "myserver", "example.com", "22", "%d/.ssh/id_rsa", false},
 	}
 

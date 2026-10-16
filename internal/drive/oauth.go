@@ -14,7 +14,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 	"golang.org/x/oauth2"
 )
 
@@ -46,7 +46,7 @@ type storedToken struct {
 
 // TokenPath returns the path of the saved OAuth token.
 func TokenPath() (string, error) {
-	dir, err := config.GetSSHMConfigDir()
+	dir, err := config.GetBaqueanoConfigDir()
 	if err != nil {
 		return "", err
 	}
@@ -55,7 +55,7 @@ func TokenPath() (string, error) {
 
 // CredentialsPath returns the path of the optional client credentials file.
 func CredentialsPath() (string, error) {
-	dir, err := config.GetSSHMConfigDir()
+	dir, err := config.GetBaqueanoConfigDir()
 	if err != nil {
 		return "", err
 	}
@@ -63,13 +63,13 @@ func CredentialsPath() (string, error) {
 }
 
 // LoadCredentials returns the OAuth client credentials, in order of
-// precedence: the SSHM_GOOGLE_CLIENT_ID/SECRET env vars, the per-user
+// precedence: the BAQUEANO_GOOGLE_CLIENT_ID/SECRET env vars, the per-user
 // drive_client.json file, or the credentials baked into official builds.
 func LoadCredentials() (Credentials, error) {
-	if id := os.Getenv("SSHM_GOOGLE_CLIENT_ID"); id != "" {
+	if id := os.Getenv("BAQUEANO_GOOGLE_CLIENT_ID"); id != "" {
 		return Credentials{
 			ClientID:     id,
-			ClientSecret: os.Getenv("SSHM_GOOGLE_CLIENT_SECRET"),
+			ClientSecret: os.Getenv("BAQUEANO_GOOGLE_CLIENT_SECRET"),
 		}, nil
 	}
 
@@ -95,7 +95,7 @@ func LoadCredentials() (Credentials, error) {
 	if builtinClientID != "" {
 		return Credentials{ClientID: builtinClientID, ClientSecret: builtinClientSecret}, nil
 	}
-	return Credentials{}, fmt.Errorf("no Google credentials: set SSHM_GOOGLE_CLIENT_ID/SECRET, create %s, or use an official sshm build", path)
+	return Credentials{}, fmt.Errorf("no Google credentials: set BAQUEANO_GOOGLE_CLIENT_ID/SECRET, create %s, or use an official baq build", path)
 }
 
 // SaveCredentials writes the OAuth client credentials to the per-user
@@ -184,7 +184,7 @@ func AuthenticatedClient(ctx context.Context) (*http.Client, error) {
 	tok, err := LoadToken()
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return nil, errors.New("not logged in: run 'sshm drive login' first")
+			return nil, errors.New("not logged in: run 'baq drive login' first")
 		}
 		return nil, err
 	}
@@ -227,9 +227,9 @@ func LoginFlow(ctx context.Context, creds Credentials, out io.Writer) error {
 		_ = srv.Shutdown(shutdownCtx)
 	}()
 
-	authURL := cfg.AuthCodeURL("sshm-state",
+	authURL := cfg.AuthCodeURL("baqueano-state",
 		oauth2.AccessTypeOffline, oauth2.ApprovalForce)
-	fmt.Fprintf(out, "Open this URL in your browser to authorize sshm:\n\n  %s\n\n", authURL)
+	fmt.Fprintf(out, "Open this URL in your browser to authorize baq:\n\n  %s\n\n", authURL)
 	openBrowser(authURL)
 
 	var code string

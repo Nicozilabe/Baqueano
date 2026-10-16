@@ -34,5 +34,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Built-in Google OAuth client baked into the binaries so users don't
           # have to create their own (create these secrets in your repo settings)
-          SSHM_GOOGLE_CLIENT_ID: ${{ secrets.SSHM_GOOGLE_CLIENT_ID }}
-          SSHM_GOOGLE_CLIENT_SECRET: ${{ secrets.SSHM_GOOGLE_CLIENT_SECRET }}
+          BAQUEANO_GOOGLE_CLIENT_ID: ${{ secrets.BAQUEANO_GOOGLE_CLIENT_ID }}
+          BAQUEANO_GOOGLE_CLIENT_SECRET: ${{ secrets.BAQUEANO_GOOGLE_CLIENT_SECRET }}

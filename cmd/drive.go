@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Nicozilabe/sshm/internal/config"
-	"github.com/Nicozilabe/sshm/internal/drive"
+	"github.com/Nicozilabe/baqueano/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/drive"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
@@ -28,12 +28,12 @@ they never mix with your regular Drive files. Only the SSH config document is
 synced: private keys are never uploaded.
 
 First create a Google Cloud "Desktop app" OAuth client. Then just run login: if
-SSHM_GOOGLE_CLIENT_ID / SSHM_GOOGLE_CLIENT_SECRET are not set and no
-<config-dir>/drive_client.json exists, sshm asks for the client id and secret
+BAQUEANO_GOOGLE_CLIENT_ID / BAQUEANO_GOOGLE_CLIENT_SECRET are not set and no
+<config-dir>/drive_client.json exists, baq asks for the client id and secret
 and saves them for next time.
 
-  sshm drive login     # one-time browser authorization
-  sshm drive sync      # merge local + remote (local wins) and upload`,
+  baq drive login     # one-time browser authorization
+  baq drive sync      # merge local + remote (local wins) and upload`,
 }
 
 var driveSyncDryRun bool
@@ -45,11 +45,11 @@ var (
 
 var driveLoginCmd = &cobra.Command{
 	Use:   "login",
-	Short: "Authorize sshm to access its Google Drive app folder",
-	Long: `Authorize sshm to access its Google Drive app folder.
+	Short: "Authorize baq to access its Google Drive app folder",
+	Long: `Authorize baq to access its Google Drive app folder.
 
-The OAuth client id and secret are taken from SSHM_GOOGLE_CLIENT_ID /
-SSHM_GOOGLE_CLIENT_SECRET, from <config-dir>/drive_client.json, or from the
+The OAuth client id and secret are taken from BAQUEANO_GOOGLE_CLIENT_ID /
+BAQUEANO_GOOGLE_CLIENT_SECRET, from <config-dir>/drive_client.json, or from the
 --client-id/--client-secret flags. If none are available, you are prompted and
 the values are saved to <config-dir>/drive_client.json.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -68,7 +68,7 @@ var driveSyncCmd = &cobra.Command{
 on conflicts, remote-only hosts are appended), write the merged file locally
 and upload it back.
 
-A backup of the current local config is written to the sshm backup directory
+A backup of the current local config is written to the baq backup directory
 before it is overwritten.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := cmd.Context()
@@ -305,13 +305,13 @@ func readFileOrEmpty(path string) ([]byte, error) {
 	return data, nil
 }
 
-// writeWithBackup snapshots an existing file into the sshm backup dir before
+// writeWithBackup snapshots an existing file into the baq backup dir before
 // overwriting it, and returns the backup path ("" when there was nothing to
 // back up).
 func writeWithBackup(path string, data []byte) (string, error) {
 	backup := ""
 	if existing, err := os.ReadFile(path); err == nil {
-		if dir, derr := config.GetSSHMBackupDir(); derr == nil {
+		if dir, derr := config.GetBaqueanoBackupDir(); derr == nil {
 			if merr := os.MkdirAll(dir, 0700); merr == nil {
 				backup = filepath.Join(dir, fmt.Sprintf("config-%d.bak", time.Now().Unix()))
 				if werr := os.WriteFile(backup, existing, 0600); werr != nil {

@@ -3,7 +3,7 @@ package ui
 import (
 	"testing"
 
-	"github.com/Nicozilabe/sshm/internal/config"
+	"github.com/Nicozilabe/baqueano/internal/config"
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
