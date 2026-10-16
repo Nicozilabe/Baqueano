@@ -1,7 +1,7 @@
 
 
 <p align="center">
-    <img src="images/logo.png" alt="Baqueano Logo" width="120" />
+    <img src="images/baqueano-logo.png" alt="Baqueano Logo" width="120" />
 </p>
 
 # Baqueano - SSH Manager
@@ -18,14 +18,6 @@
 > **Website:** [nicozilabe.github.io/baqueano](https://nicozilabe.github.io/baqueano/) · [Privacy Policy](https://nicozilabe.github.io/baqueano/privacy.html) · [Terms of Use](https://nicozilabe.github.io/baqueano/terms.html)
 
 Baqueano is a beautiful command-line tool that transforms how you manage and connect to your SSH hosts. Built with Go and featuring an intuitive TUI interface, it makes SSH connection management effortless and enjoyable.
-
-<p align="center">
-    <a href="images/baq.gif" target="_blank">
-        <img src="images/baq.gif" alt="Demo Baqueano Terminal" width="800" />
-    </a>
-    <br>
-    <em>Click on the image to view in full size</em>
-</p>
 
 ## Features
 
@@ -880,8 +872,7 @@ baq/
 │   └── validation/     # Input validation
 │       └── ssh.go      # SSH config validation
 ├── images/             # Documentation assets
-│   ├── logo.png        # Project logo
-│   └── baq.gif        # Demo animation
+│   └── baqueano-logo.png # Project logo
 ├── install/            # Installation scripts
 │   ├── unix.sh              # Unix/Linux/macOS installer
 │   ├── windows.ps1          # Windows installer
