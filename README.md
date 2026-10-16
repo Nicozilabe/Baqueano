@@ -1,7 +1,7 @@
 
 
 <p align="center">
-    <img src="images/logo.png" alt="Baqueano Logo" width="120" />
+    <img src="images/baqueano-logo.png" alt="Baqueano Logo" width="120" />
 </p>
 
 # Baqueano - SSH Manager
@@ -872,7 +872,7 @@ baq/
 │   └── validation/     # Input validation
 │       └── ssh.go      # SSH config validation
 ├── images/             # Documentation assets
-│   └── logo.png        # Project logo
+│   └── baqueano-logo.png # Project logo
 ├── install/            # Installation scripts
 │   ├── unix.sh              # Unix/Linux/macOS installer
 │   ├── windows.ps1          # Windows installer
