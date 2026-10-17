@@ -89,17 +89,3 @@ func (m *Model) getPingStatusIndicator(hostName string) string {
 		return "⚫" // Gray circle for unknown
 	}
 }
-
-// extractHostNameFromTableRow extracts the host name from the first column,
-// removing the ping status indicator
-func extractHostNameFromTableRow(firstColumn string) string {
-	// The first column format is: "🟢 hostname" or "⚫ hostname" etc.
-	// We need to remove the emoji and space to get just the hostname
-	parts := strings.Fields(firstColumn)
-	if len(parts) >= 2 {
-		// Return everything after the first part (the emoji)
-		return strings.Join(parts[1:], " ")
-	}
-	// Fallback: if there's no space, return the whole string
-	return firstColumn
-}

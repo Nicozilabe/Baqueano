@@ -2,7 +2,6 @@ package ui
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/Nicozilabe/baqueano/internal/config"
@@ -44,6 +43,14 @@ func NewModel(hosts []config.SSHHost, configFile string, searchMode bool, curren
 		historyManager = nil
 	}
 
+	// Load the folder organization. A failure is not fatal: folders are an
+	// optional convenience on top of the plain host list.
+	folderStore, err := config.LoadFolderStore()
+	if err != nil {
+		fmt.Printf("Warning: Could not load folder organization: %v\n", err)
+		folderStore = nil
+	}
+
 	// Create initial styles (will be updated on first WindowSizeMsg)
 	styles := NewStyles(80) // Default width
 
@@ -52,19 +59,21 @@ func NewModel(hosts []config.SSHHost, configFile string, searchMode bool, curren
 
 	// Create the model with default sorting by name
 	m := Model{
-		allHosts:       hosts,
-		historyManager: historyManager,
-		pingManager:    pingManager,
-		sortMode:       SortByName,
-		configFile:     configFile,
-		currentVersion: currentVersion,
-		appConfig:      appConfig,
-		styles:         styles,
-		width:          80,
-		height:         24,
-		ready:          false,
-		viewMode:       ViewList,
-		searchMode:     searchMode,
+		allHosts:        hosts,
+		historyManager:  historyManager,
+		pingManager:     pingManager,
+		sortMode:        SortByName,
+		configFile:      configFile,
+		currentVersion:  currentVersion,
+		appConfig:       appConfig,
+		styles:          styles,
+		width:           80,
+		height:          24,
+		ready:           false,
+		viewMode:        ViewList,
+		searchMode:      searchMode,
+		folderStore:     folderStore,
+		expandedFolders: map[string]bool{},
 	}
 
 	// Apply visibility filter (showHidden is false by default)
@@ -96,40 +105,8 @@ func NewModel(hosts []config.SSHHost, configFile string, searchMode bool, curren
 		{Title: "Last Login", Width: lastLoginWidth},
 	}
 
-	// Convert hosts to table rows
+	// Convert hosts to table rows via the folder tree
 	var rows []table.Row
-	for _, host := range sortedHosts {
-		// Get ping status indicator
-		statusIndicator := m.getPingStatusIndicator(host.Name)
-
-		// Format tags for display
-		var tagsStr string
-		if len(host.Tags) > 0 {
-			// Add the # prefix to each tag and join them with spaces
-			var formattedTags []string
-			for _, tag := range host.Tags {
-				formattedTags = append(formattedTags, "#"+tag)
-			}
-			tagsStr = strings.Join(formattedTags, " ")
-		}
-
-		// Format last login information
-		var lastLoginStr string
-		if historyManager != nil {
-			if lastConnect, exists := historyManager.GetLastConnectionTime(host.Name); exists {
-				lastLoginStr = formatTimeAgo(lastConnect)
-			}
-		}
-
-		rows = append(rows, table.Row{
-			statusIndicator + " " + host.Name,
-			host.Hostname,
-			// host.User,        // Commented to save space
-			// host.Port,        // Commented to save space
-			tagsStr,
-			lastLoginStr,
-		})
-	}
 
 	// Create the table with initial height (will be updated on first WindowSizeMsg)
 	t := table.New(
@@ -154,6 +131,15 @@ func NewModel(hosts []config.SSHHost, configFile string, searchMode bool, curren
 	m.table = t
 	m.searchInput = ti
 	m.filteredHosts = sortedHosts
+
+	// Initialize the inline folder prompt input (kept unfocused until used).
+	prompt := textinput.New()
+	prompt.CharLimit = 120
+	prompt.Width = 40
+	m.promptInput = prompt
+
+	// Build the flattened folder tree and render its rows
+	m.updateTableRows()
 
 	// Initialize table styles based on initial focus state
 	m.updateTableStyles()

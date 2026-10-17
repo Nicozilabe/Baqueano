@@ -27,6 +27,7 @@ Baqueano is a beautiful command-line tool that transforms how you manage and con
 - **Port Forwarding** - Easy setup for Local, Remote, and Dynamic (SOCKS) forwarding with history persistence
 - **Easy Management** - Add, edit, move, and manage SSH configurations seamlessly
 - **Tag Support** - Organize your hosts with custom tags for better categorization; use the special `hidden` tag to exclude hosts from the list while keeping them connectable
+- **Folders** - Group hosts into collapsible folders and nested subfolders, with search that reveals matches automatically
 - **Smart Search** - Find hosts quickly with built-in filtering and search
 - **Connectivity Status** - Color-coded SSH connectivity indicators, checked in the background when the TUI starts and on demand
 - **Smart Updates** - Automatic version checking with update notifications
@@ -116,16 +117,38 @@ baq
 
 **Host table:**
 - `↑/↓` or `j/k` - Navigate hosts
-- `Enter` - Connect to selected host
+- `→` - Open the selected folder (or step into it)
+- `←` - Close the selected folder (or go up to its parent)
+- `Enter` - Connect to the selected host (toggles the selected folder)
+- `Space` - Toggle the selected folder
 - `a` - Add new host
 - `e` - Edit selected host
 - `d` - Delete selected host
 - `m` - Move host to another config file (requires SSH Include directives)
+- `N` - New folder (use `prod/web` to create nested subfolders)
+- `M` - Move the selected host into a folder
+- `R` - Rename the selected folder
+- `D` - Delete the selected folder (its hosts move up one level)
 - `f` - Port forwarding setup
 - `p` - Check the status of all hosts again
 - `H` - Toggle hidden hosts visibility
 - `q` - Quit
 - `/` or `Tab` - Back to the search
+
+**Folders:**
+- Press `N` to create a folder; type a path like `prod/web/db` to create nested
+  subfolders in one go.
+- Select a host and press `M` to move it into a folder (an empty name moves it
+  back to the root).
+- `→`/`←` (or `Enter`/`Space`) expand and collapse folders; folders remember
+  their state between runs.
+- Searching expands every folder automatically so matches inside them are
+  always visible.
+- Folders are stored separately from your SSH config, in
+  `folders.json` inside the Baqueano config directory (`%APPDATA%\baqueano` on
+  Windows, `~/.config/baqueano` elsewhere). Your `~/.ssh/config` is never
+  modified by the folder feature, and folders are **not** part of the Google
+  Drive sync.
 
 **Status Indicators** (checked when the TUI starts, and again with `p`):
 - **Online** - Host is reachable via SSH
@@ -469,7 +492,8 @@ baq move hostname -c /path/to/custom/ssh_config
 Keep the same SSH host list on several machines by storing it in your Google
 Drive. Hosts live in a hidden **appDataFolder** that only baq can see, so they
 never mix with your regular Drive files. Only the SSH config document is
-synced: **private keys are never uploaded**.
+synced: **private keys are never uploaded**, and folder organization
+(`folders.json`) stays local to each machine.
 
 **One-time setup**
 
@@ -875,7 +899,8 @@ baq/
 │   └── update.go       # Self-update command
 ├── internal/
 │   ├── config/         # SSH configuration management
-│   │   └── ssh.go      # Config parsing and manipulation
+│   │   ├── ssh.go      # Config parsing and manipulation
+│   │   └── folders.go  # Folder organization store (folders.json)
 │   ├── connectivity/   # SSH connectivity checking
 │   │   └── ping.go     # Asynchronous SSH ping functionality
 │   ├── history/        # Connection history tracking
@@ -892,6 +917,8 @@ baq/
 │   │   ├── update.go   # Message handling and state updates
 │   │   ├── view.go     # UI rendering and layout
 │   │   ├── table.go    # Host list table component with status indicators
+│   │   ├── tree.go     # Folder tree building and row rendering
+│   │   ├── folders.go  # Folder navigation and inline folder prompts
 │   │   ├── add_form.go # Add host form interface
 │   │   ├── edit_form.go# Edit host form interface
 │   │   ├── move_form.go# Move host form interface

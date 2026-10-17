@@ -112,7 +112,31 @@ type Model struct {
 	// Connection attempt state
 	connectingHost string
 	spinnerFrame   int
+
+	// Folder organization
+	folderStore     *config.FolderStore
+	expandedFolders map[string]bool // folder path -> expanded (absent = expanded)
+	treeNodes       []treeNode      // flattened rows shown in the table
+
+	// Inline prompt (create folder, rename, move host, ...)
+	promptMode   promptMode
+	promptTitle  string
+	promptInput  textinput.Model
+	promptHost   string // host being moved
+	promptFolder string // folder being renamed/deleted
+	promptError  string
 }
+
+// promptMode identifies which inline prompt is currently open.
+type promptMode int
+
+const (
+	promptNone promptMode = iota
+	promptNewFolder
+	promptMoveHost
+	promptRenameFolder
+	promptDeleteFolder
+)
 
 // applyVisibilityFilter returns hosts filtered according to the showHidden flag.
 func (m Model) applyVisibilityFilter(hosts []config.SSHHost) []config.SSHHost {
