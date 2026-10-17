@@ -224,7 +224,11 @@ func (m *Model) openMoveHostPrompt() (Model, tea.Cmd) {
 	}
 
 	m.promptHost = host.Name
-	m.openPrompt(promptMoveHost, "Move "+host.Name+" to folder", "folder name (empty = root)", store.FolderOf(host.Name))
+	title := "Move " + host.Name + " to folder"
+	if current := store.FolderOf(host.Name); current != "" {
+		title += " (current: " + current + ")"
+	}
+	m.openPrompt(promptMoveHost, title, "folder name (empty = root)", "")
 	return *m, textinput.Blink
 }
 
@@ -242,7 +246,7 @@ func (m *Model) openRenameFolderPrompt() (Model, tea.Cmd) {
 	}
 
 	m.promptFolder = folder
-	m.openPrompt(promptRenameFolder, "Rename folder", "new folder name", folder)
+	m.openPrompt(promptRenameFolder, "Rename folder '"+folder+"'", "new name (empty = keep)", "")
 	return *m, textinput.Blink
 }
 
@@ -355,7 +359,8 @@ func (m Model) submitPrompt() (tea.Model, tea.Cmd) {
 	case promptRenameFolder:
 		newPath := config.NormalizeFolderPath(m.promptInput.Value())
 		if newPath == "" {
-			m.promptError = "Enter a folder name"
+			// Empty input keeps the current name.
+			m.closePrompt()
 			return m, nil
 		}
 		if err := store.RenameFolder(m.promptFolder, newPath); err != nil {

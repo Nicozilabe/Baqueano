@@ -275,6 +275,103 @@ func TestLowercaseMoveFallsBackToFolder(t *testing.T) {
 	}
 }
 
+// TestMoveHostReplacesFolder verifies that moving a host that already lives in
+// a folder replaces its folder instead of appending to the old one.
+func TestMoveHostReplacesFolder(t *testing.T) {
+	m := folderTestModel(t)
+	if err := m.folderStore.SetHostFolder("server1", "prod"); err != nil {
+		t.Fatal(err)
+	}
+	m.updateTableRows()
+	hostIdx := -1
+	for i, n := range m.treeNodes {
+		if n.kind == nodeKindHost && n.name == "server1" {
+			hostIdx = i
+			break
+		}
+	}
+	if hostIdx < 0 {
+		t.Fatal("server1 not found in tree")
+	}
+	m.table.SetCursor(hostIdx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
+	if m.promptMode != promptMoveHost {
+		t.Fatalf("promptMode = %v, want promptMoveHost", m.promptMode)
+	}
+	if got := m.promptInput.Value(); got != "" {
+		t.Fatalf("move prompt should start empty, got %q", got)
+	}
+
+	m, _ = press(t, m, typed("staging")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	if got := m.folderStore.FolderOf("server1"); got != "staging" {
+		t.Errorf("FolderOf(server1) = %q, want staging", got)
+	}
+}
+
+// TestRenameFolderReplacesName verifies that typing in the rename prompt
+// replaces the folder name instead of appending to it.
+func TestRenameFolderReplacesName(t *testing.T) {
+	m := folderTestModel(t)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("N")})
+	m, _ = press(t, m, typed("prod")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	idx := folderIndex(m.treeNodes, "prod")
+	if idx < 0 {
+		t.Fatal("folder prod not found after creation")
+	}
+	m.table.SetCursor(idx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("R")})
+	if m.promptMode != promptRenameFolder {
+		t.Fatalf("promptMode = %v, want promptRenameFolder", m.promptMode)
+	}
+	if got := m.promptInput.Value(); got != "" {
+		t.Fatalf("rename prompt should start empty, got %q", got)
+	}
+
+	m, _ = press(t, m, typed("staging")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	folders := m.folderStore.AllFolders()
+	if len(folders) != 1 || folders[0] != "staging" {
+		t.Errorf("folders = %v, want [staging]", folders)
+	}
+	if folderIndex(m.treeNodes, "staging") < 0 {
+		t.Errorf("renamed folder not shown in tree: %v", folders)
+	}
+}
+
+// TestRenameFolderEmptyKeepsName verifies that submitting an empty rename keeps
+// the existing folder untouched.
+func TestRenameFolderEmptyKeepsName(t *testing.T) {
+	m := folderTestModel(t)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("N")})
+	m, _ = press(t, m, typed("prod")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	idx := folderIndex(m.treeNodes, "prod")
+	if idx < 0 {
+		t.Fatal("folder prod not found after creation")
+	}
+	m.table.SetCursor(idx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("R")})
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	if folders := m.folderStore.AllFolders(); len(folders) != 1 || folders[0] != "prod" {
+		t.Errorf("folders = %v, want [prod]", folders)
+	}
+	if m.promptMode != promptNone {
+		t.Error("empty rename should close the prompt")
+	}
+}
+
 // TestDeleteFolderClampsCursor verifies the cursor stays within range after the
 // highlighted folder is removed.
 func TestDeleteFolderClampsCursor(t *testing.T) {
