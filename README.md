@@ -124,7 +124,7 @@ baq
 - `a` - Add new host
 - `e` - Edit selected host
 - `d` - Delete selected host
-- `m` - Move host to another config file (requires SSH Include directives)
+- `m` - Move host to another config file (requires SSH Include directives; falls back to moving into a folder when there is only one config file)
 - `N` - New folder (use `prod/web` to create nested subfolders)
 - `M` - Move the selected host into a folder
 - `R` - Rename the selected folder

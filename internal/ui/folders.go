@@ -41,6 +41,49 @@ func (m Model) selectedFolder() (string, bool) {
 	return "", false
 }
 
+// nodeKey identifies a table row across rebuilds (folders by path, hosts by
+// name) so the cursor can stay on the same logical row after the tree changes.
+func nodeKey(node treeNode) string {
+	if node.kind == nodeKindFolder {
+		return "F:" + node.path
+	}
+	return "H:" + node.name
+}
+
+// cursorKey returns the identity of the row under the cursor ("" when none).
+func (m Model) cursorKey() string {
+	if node, ok := m.selectedNode(); ok {
+		return nodeKey(node)
+	}
+	return ""
+}
+
+// restoreCursorTo puts the cursor back on the row with the given key. When that
+// row is gone (e.g. a deleted folder) the cursor is clamped into range instead.
+func (m *Model) restoreCursorTo(key string) {
+	if key != "" {
+		for i, node := range m.treeNodes {
+			if nodeKey(node) == key {
+				m.table.SetCursor(i)
+				return
+			}
+		}
+	}
+	m.clampCursor()
+}
+
+// clampCursor keeps the cursor inside the current row range.
+func (m *Model) clampCursor() {
+	if len(m.treeNodes) == 0 {
+		return
+	}
+	if cursor := m.table.Cursor(); cursor >= len(m.treeNodes) {
+		m.table.SetCursor(len(m.treeNodes) - 1)
+	} else if cursor < 0 {
+		m.table.SetCursor(0)
+	}
+}
+
 // setFolderExpanded stores the expanded state of a folder. Ancestor folders are
 // expanded too, so revealing a nested folder never leaves a collapsed parent.
 func (m *Model) setFolderExpanded(path string, expanded bool) {
@@ -280,6 +323,9 @@ func (m Model) submitPrompt() (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
+	// Remember the row the cursor was on so the selection survives the rebuild.
+	key := m.cursorKey()
+
 	switch m.promptMode {
 	case promptNewFolder:
 		path := config.NormalizeFolderPath(m.promptInput.Value())
@@ -302,6 +348,9 @@ func (m Model) submitPrompt() (tea.Model, tea.Cmd) {
 		if folder != "" {
 			m.ensureFolderVisible(folder)
 		}
+		if m.promptHost != "" {
+			key = "H:" + m.promptHost
+		}
 
 	case promptRenameFolder:
 		newPath := config.NormalizeFolderPath(m.promptInput.Value())
@@ -314,16 +363,20 @@ func (m Model) submitPrompt() (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		m.ensureFolderVisible(newPath)
+		key = "F:" + newPath
 
 	case promptDeleteFolder:
 		if err := store.DeleteFolder(m.promptFolder); err != nil {
 			m.promptError = err.Error()
 			return m, nil
 		}
+		// The folder is gone: fall back to clamping the cursor.
+		key = ""
 	}
 
 	m.closePrompt()
 	m.updateTableRows()
+	m.restoreCursorTo(key)
 	return m, nil
 }
 

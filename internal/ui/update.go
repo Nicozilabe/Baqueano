@@ -663,6 +663,7 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			}
 
 			m.updateTableRows()
+			m.clampCursor()
 			m.deleteMode = false
 			m.deleteHost = nil
 			m.table.Focus()
@@ -714,8 +715,15 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 	case "m":
 		if !m.searchMode && !m.deleteMode {
-			// Move the selected host to another config file
+			// Move the selected host. When there is no other config file to
+			// move it to (no SSH Include directives), fall back to moving it
+			// into a folder (the same action as "M").
 			if host, ok := m.selectedHost(); ok {
+				destinations, err := config.GetConfigFilesExcludingCurrent(host.Name, m.configFile)
+				if err != nil || len(destinations) == 0 {
+					return m.openMoveHostPrompt()
+				}
+
 				moveForm, err := NewMoveForm(host.Name, m.styles, m.width, m.height, m.configFile)
 				if err != nil {
 					// Show error message to user
@@ -818,6 +826,7 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "H":
 		if !m.searchMode && !m.deleteMode {
 			// Toggle visibility of hidden hosts
+			key := m.cursorKey()
 			m.showHidden = !m.showHidden
 			m.hosts = m.sortHosts(m.applyVisibilityFilter(m.allHosts))
 			if m.searchInput.Value() != "" {
@@ -826,11 +835,13 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.filteredHosts = m.hosts
 			}
 			m.updateTableRows()
+			m.restoreCursorTo(key)
 			return m, nil
 		}
 	case "s":
 		if !m.searchMode && !m.deleteMode {
 			// Cycle through sort modes (only 2 modes now)
+			key := m.cursorKey()
 			m.sortMode = (m.sortMode + 1) % 2
 			// Re-apply the current filter with the new sort mode
 			if m.searchInput.Value() != "" {
@@ -839,11 +850,13 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.filteredHosts = m.sortHosts(m.hosts)
 			}
 			m.updateTableRows()
+			m.restoreCursorTo(key)
 			return m, nil
 		}
 	case "r":
 		if !m.searchMode && !m.deleteMode {
 			// Switch to sort by recent (last used)
+			key := m.cursorKey()
 			m.sortMode = SortByLastUsed
 			// Re-apply the current filter with the new sort mode
 			if m.searchInput.Value() != "" {
@@ -852,11 +865,13 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.filteredHosts = m.sortHosts(m.hosts)
 			}
 			m.updateTableRows()
+			m.restoreCursorTo(key)
 			return m, nil
 		}
 	case "n":
 		if !m.searchMode && !m.deleteMode {
 			// Switch to sort by name
+			key := m.cursorKey()
 			m.sortMode = SortByName
 			// Re-apply the current filter with the new sort mode
 			if m.searchInput.Value() != "" {
@@ -865,6 +880,7 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.filteredHosts = m.sortHosts(m.hosts)
 			}
 			m.updateTableRows()
+			m.restoreCursorTo(key)
 			return m, nil
 		}
 	case "l":

@@ -72,7 +72,7 @@ func (m *helpModel) View() string {
 			m.styles.HelpText.Render("edit selected host")),
 		lipgloss.JoinHorizontal(lipgloss.Left,
 			m.styles.FocusedLabel.Render("m  "),
-			m.styles.HelpText.Render("move host to another config")),
+			m.styles.HelpText.Render("move host to another config (or into a folder when there is no other config)")),
 		lipgloss.JoinHorizontal(lipgloss.Left,
 			m.styles.FocusedLabel.Render("d  "),
 			m.styles.HelpText.Render("delete selected host")),

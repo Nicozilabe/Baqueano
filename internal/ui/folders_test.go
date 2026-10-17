@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -224,5 +225,78 @@ func TestRenderFolderPromptDoesNotPanic(t *testing.T) {
 	m, _ := press(t, folderTestModel(t), tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("N")})
 	if out := m.renderFolderPrompt(); out == "" {
 		t.Error("renderFolderPrompt returned empty output")
+	}
+}
+
+// TestCreateFolderKeepsCursorOnHost guards against the cursor jumping onto the
+// freshly created folder: with the cursor stuck on the folder, "M" could no
+// longer select the host to organize.
+func TestCreateFolderKeepsCursorOnHost(t *testing.T) {
+	m := folderTestModel(t)
+	m.table.SetCursor(0) // server1
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("N")})
+	m, _ = press(t, m, typed("prod")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	host, ok := m.selectedHost()
+	if !ok || host.Name != "server1" {
+		t.Fatalf("after creating a folder, selected host = %q (ok=%v), want server1", host.Name, ok)
+	}
+
+	// The move shortcut must now be able to target the folder.
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
+	if m.promptMode != promptMoveHost {
+		t.Fatalf("M did not open the move prompt (promptMode = %v)", m.promptMode)
+	}
+	m, _ = press(t, m, typed("prod")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	if got := m.folderStore.FolderOf("server1"); got != "prod" {
+		t.Errorf("FolderOf(server1) = %q, want prod", got)
+	}
+}
+
+// TestLowercaseMoveFallsBackToFolder verifies that "m" (move to another config
+// file) opens the folder prompt when there is no other config file to move the
+// host to, instead of failing with "no includes found".
+func TestLowercaseMoveFallsBackToFolder(t *testing.T) {
+	m := folderTestModel(t)
+	base := filepath.Join(t.TempDir(), "config")
+	if err := os.WriteFile(base, []byte("Host server1\n  HostName server1.example.com\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	m.configFile = base
+	m.table.SetCursor(0) // server1
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("m")})
+	if m.promptMode != promptMoveHost {
+		t.Fatalf("lowercase m should open the folder prompt when there is no other config file, got promptMode = %v (viewMode = %v)", m.promptMode, m.viewMode)
+	}
+}
+
+// TestDeleteFolderClampsCursor verifies the cursor stays within range after the
+// highlighted folder is removed.
+func TestDeleteFolderClampsCursor(t *testing.T) {
+	m := folderTestModel(t)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("N")})
+	m, _ = press(t, m, typed("prod")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	idx := folderIndex(m.treeNodes, "prod")
+	if idx < 0 {
+		t.Fatal("folder prod not found after creation")
+	}
+	m.table.SetCursor(idx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("D")})
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	if len(m.folderStore.AllFolders()) != 0 {
+		t.Errorf("folder not deleted: %v", m.folderStore.AllFolders())
+	}
+	if c := m.table.Cursor(); c < 0 || c >= len(m.treeNodes) {
+		t.Errorf("cursor %d out of range for %d rows", c, len(m.treeNodes))
 	}
 }

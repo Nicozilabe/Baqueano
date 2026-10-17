@@ -127,7 +127,7 @@ func (m Model) renderListView() string {
 	// Add the help text
 	var helpText string
 	if !m.searchMode {
-		helpText = " ↑/↓: navigate • →: open • ←: close • Enter: connect • N: folder • a: add • e: edit • d: delete • m: move • /: search • h: help • q: quit"
+		helpText = " ↑/↓: navigate • →: open • ←: close • Enter: connect • N: folder • M: to folder • a: add • e: edit • d: delete • m: move • /: search • h: help • q: quit"
 	} else {
 		helpText = " ↑/↓: select • Enter: connect • Tab: table shortcuts • Esc: clear/quit"
 	}
