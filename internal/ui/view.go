@@ -127,7 +127,7 @@ func (m Model) renderListView() string {
 	// Add the help text
 	var helpText string
 	if !m.searchMode {
-		helpText = " ↑/↓: navigate • Enter: connect • a: add • e: edit • d: delete • /: search • i: info • h: help • q: quit"
+		helpText = " ↑/↓: navigate • →: open • ←: close • Enter: connect • N: folder • a: add • e: edit • d: delete • m: move • /: search • h: help • q: quit"
 	} else {
 		helpText = " ↑/↓: select • Enter: connect • Tab: table shortcuts • Esc: clear/quit"
 	}
@@ -158,7 +158,67 @@ func (m Model) renderListView() string {
 		return centeredConfirmation
 	}
 
+	// If a folder prompt is open, overlay it on the list.
+	if m.promptMode != promptNone {
+		centeredPrompt := lipgloss.Place(
+			m.width,
+			m.height,
+			lipgloss.Center,
+			lipgloss.Center,
+			m.renderFolderPrompt(),
+		)
+		return centeredPrompt
+	}
+
 	return mainView
+}
+
+// renderFolderPrompt renders the inline dialog used to create, rename, move
+// into, or delete a folder.
+func (m Model) renderFolderPrompt() string {
+	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(PrimaryColor))
+	hintStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(TextDimColor))
+	errorStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(ErrorColor)).Bold(true)
+
+	lines := []string{titleStyle.Render(m.promptTitle), ""}
+
+	switch m.promptMode {
+	case promptDeleteFolder:
+		lines = append(lines,
+			fmt.Sprintf("Delete folder '%s'?", m.promptFolder),
+			"",
+			hintStyle.Render("Hosts inside move up one level."),
+			"",
+			hintStyle.Render("Enter/y: confirm • Esc: cancel"),
+		)
+	default:
+		m.promptInput.Width = m.promptInputWidth()
+		lines = append(lines, m.promptInput.View())
+		if m.promptError != "" {
+			lines = append(lines, "", errorStyle.Render("❌ "+m.promptError))
+		} else {
+			lines = append(lines, "", hintStyle.Render("Enter: confirm • Esc: cancel"))
+		}
+	}
+
+	raw := strings.Join(lines, "\n")
+
+	maxw := 0
+	for _, ln := range lines {
+		if w := lipgloss.Width(ln); w > maxw {
+			maxw = w
+		}
+	}
+	if maxw < 40 {
+		maxw = 40
+	}
+
+	return lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color(PrimaryColor)).
+		PaddingTop(1).PaddingBottom(1).PaddingLeft(2).PaddingRight(2).
+		Width(maxw + 4).
+		Render(raw)
 }
 
 // renderDeleteConfirmation renders a clean delete confirmation dialog

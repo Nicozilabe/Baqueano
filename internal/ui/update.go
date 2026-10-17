@@ -558,6 +558,12 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
+	// An inline prompt (new folder, move host, rename/delete folder) captures
+	// every key while it is open.
+	if m.promptMode != promptNone {
+		return m.handlePromptKeys(msg)
+	}
+
 	// Ignore keys while a connection attempt is in progress
 	if m.connectingHost != "" {
 		return m, nil
@@ -616,15 +622,7 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			return m, m.focusSearch()
 		}
 	case "enter":
-		if m.searchMode {
-			// Connect to the selected result; without result, stay in the search
-			selected := m.table.SelectedRow()
-			if len(selected) == 0 {
-				return m, nil
-			}
-			hostName := extractHostNameFromTableRow(selected[0])
-			return m.startConnect(hostName)
-		} else if m.deleteMode {
+		if m.deleteMode {
 			// Confirm deletion
 			var err error
 			if m.deleteHost != nil {
@@ -669,22 +667,42 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.deleteHost = nil
 			m.table.Focus()
 			return m, nil
-		} else {
-			// Connect to the selected host from the table
-			selected := m.table.SelectedRow()
-			if len(selected) == 0 {
+		}
+
+		// Table (or search) selection: folders toggle, hosts connect.
+		node, ok := m.selectedNode()
+		if !ok {
+			return m, nil
+		}
+		if node.kind == nodeKindFolder {
+			m.activateFolder(node)
+			return m, nil
+		}
+		return m.startConnect(node.host.Name)
+
+	case " ":
+		// Space toggles a folder in the table (in search it is a normal key).
+		if !m.searchMode && !m.deleteMode {
+			if node, ok := m.selectedNode(); ok && node.kind == nodeKindFolder {
+				m.activateFolder(node)
 				return m, nil
 			}
-			hostName := extractHostNameFromTableRow(selected[0])
-			return m.startConnect(hostName)
+		}
+
+	case "right":
+		if !m.searchMode && !m.deleteMode {
+			return m.handleTreeRight()
+		}
+
+	case "left":
+		if !m.searchMode && !m.deleteMode {
+			return m.handleTreeLeft()
 		}
 	case "e":
 		if !m.searchMode && !m.deleteMode {
 			// Edit the selected host
-			selected := m.table.SelectedRow()
-			if len(selected) > 0 {
-				hostName := extractHostNameFromTableRow(selected[0]) // Extract hostname from first column
-				editForm, err := NewEditForm(hostName, m.styles, m.width, m.height, m.configFile)
+			if host, ok := m.selectedHost(); ok {
+				editForm, err := NewEditForm(host.Name, m.styles, m.width, m.height, m.configFile)
 				if err != nil {
 					// Handle error - could show in UI
 					return m, nil
@@ -697,10 +715,8 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "m":
 		if !m.searchMode && !m.deleteMode {
 			// Move the selected host to another config file
-			selected := m.table.SelectedRow()
-			if len(selected) > 0 {
-				hostName := extractHostNameFromTableRow(selected[0]) // Extract hostname from first column
-				moveForm, err := NewMoveForm(hostName, m.styles, m.width, m.height, m.configFile)
+			if host, ok := m.selectedHost(); ok {
+				moveForm, err := NewMoveForm(host.Name, m.styles, m.width, m.height, m.configFile)
 				if err != nil {
 					// Show error message to user
 					m.errorMessage = err.Error()
@@ -718,10 +734,8 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "i":
 		if !m.searchMode && !m.deleteMode {
 			// Show info for the selected host
-			selected := m.table.SelectedRow()
-			if len(selected) > 0 {
-				hostName := extractHostNameFromTableRow(selected[0]) // Extract hostname from first column
-				infoForm, err := NewInfoForm(hostName, m.styles, m.width, m.height, m.configFile)
+			if host, ok := m.selectedHost(); ok {
+				infoForm, err := NewInfoForm(host.Name, m.styles, m.width, m.height, m.configFile)
 				if err != nil {
 					// Handle error - could show in UI
 					return m, nil
@@ -772,13 +786,10 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "d":
 		if !m.searchMode && !m.deleteMode {
 			// Delete the selected host
-			cursor := m.table.Cursor()
-			if cursor >= 0 && cursor < len(m.filteredHosts) {
-				// Get the host at the cursor position (which corresponds to filteredHosts index)
-				targetHost := &m.filteredHosts[cursor]
-
+			if host, ok := m.selectedHost(); ok {
+				targetHost := host
 				m.deleteMode = true
-				m.deleteHost = targetHost
+				m.deleteHost = &targetHost
 				m.table.Blur()
 				return m, nil
 			}
@@ -791,10 +802,8 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "f":
 		if !m.searchMode && !m.deleteMode {
 			// Port forwarding for the selected host
-			selected := m.table.SelectedRow()
-			if len(selected) > 0 {
-				hostName := extractHostNameFromTableRow(selected[0]) // Extract hostname from first column
-				m.portForwardForm = NewPortForwardForm(hostName, m.styles, m.width, m.height, m.configFile, m.historyManager)
+			if host, ok := m.selectedHost(); ok {
+				m.portForwardForm = NewPortForwardForm(host.Name, m.styles, m.width, m.height, m.configFile, m.historyManager)
 				m.viewMode = ViewPortForward
 				return m, textinput.Blink
 			}
@@ -865,6 +874,26 @@ func (m Model) handleListViewKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "o":
 		if !m.searchMode && !m.deleteMode {
 			return m, m.startDriveSyncCmd()
+		}
+	case "N":
+		if !m.searchMode && !m.deleteMode {
+			// Create a new folder (supports "prod/web" for subfolders)
+			return m.openNewFolderPrompt()
+		}
+	case "M":
+		if !m.searchMode && !m.deleteMode {
+			// Move the selected host into a folder
+			return m.openMoveHostPrompt()
+		}
+	case "R":
+		if !m.searchMode && !m.deleteMode {
+			// Rename the selected folder
+			return m.openRenameFolderPrompt()
+		}
+	case "D":
+		if !m.searchMode && !m.deleteMode {
+			// Delete the selected folder (hosts move up one level)
+			return m.openDeleteFolderPrompt()
 		}
 	}
 

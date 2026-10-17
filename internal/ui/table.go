@@ -121,16 +121,29 @@ func (m *Model) calculateDynamicColumnWidths(hosts []config.SSHHost) (int, int, 
 	return nameWidth, hostnameWidth, tagsWidth, lastLoginWidth
 }
 
-// updateTableRows updates the table with filtered hosts
+// updateTableRows rebuilds the flattened folder tree and renders its rows
 func (m *Model) updateTableRows() {
-	var rows []table.Row
 	hostsToShow := m.filteredHosts
 	if hostsToShow == nil {
 		hostsToShow = m.hosts
 	}
 
-	for _, host := range hostsToShow {
-		// Get ping status indicator
+	// Flatten the folder tree (or the plain host list when folders are off).
+	m.treeNodes = m.buildTreeNodes(hostsToShow)
+
+	rows := make([]table.Row, 0, len(m.treeNodes))
+	for _, node := range m.treeNodes {
+		if node.kind == nodeKindFolder {
+			rows = append(rows, table.Row{
+				folderDisplayLabel(node),
+				"",
+				"",
+				"",
+			})
+			continue
+		}
+
+		host := node.host
 		statusIndicator := m.getPingStatusIndicator(host.Name)
 
 		// Format tags for display
@@ -153,10 +166,8 @@ func (m *Model) updateTableRows() {
 		}
 
 		rows = append(rows, table.Row{
-			statusIndicator + " " + host.Name,
+			hostDisplayLabel(node.depth, statusIndicator, host.Name),
 			host.Hostname,
-			// host.User,      // Commented to save space
-			// host.Port,      // Commented to save space
 			tagsStr,
 			lastLoginStr,
 		})
@@ -229,6 +240,17 @@ func (m *Model) updateTableColumns() {
 
 	// Use dynamic column width calculation
 	nameWidth, hostnameWidth, tagsWidth, lastLoginWidth := m.calculateDynamicColumnWidths(hostsToShow)
+
+	// Folder labels can be wider than the longest host name; make sure the Name
+	// column fits them too.
+	for _, node := range m.treeNodes {
+		if node.kind != nodeKindFolder {
+			continue
+		}
+		if w := len(folderDisplayLabel(node)) + 2; w > nameWidth {
+			nameWidth = w
+		}
+	}
 
 	// Create new columns with updated widths and sort indicators
 	nameTitle := "Name"
