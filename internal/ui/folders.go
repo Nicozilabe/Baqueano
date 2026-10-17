@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"sort"
+
 	"github.com/Nicozilabe/baqueano/internal/config"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -209,7 +211,9 @@ func (m *Model) openNewFolderPrompt() (Model, tea.Cmd) {
 	return *m, textinput.Blink
 }
 
-// openMoveHostPrompt asks which folder the selected host should move into.
+// openMoveHostPrompt asks which folder the selected host should move into. When
+// folders already exist it shows a picker so the name does not have to be typed;
+// otherwise it falls back to the free-form path prompt.
 func (m *Model) openMoveHostPrompt() (Model, tea.Cmd) {
 	store := m.ensureFolderStore()
 	if store == nil {
@@ -225,10 +229,45 @@ func (m *Model) openMoveHostPrompt() (Model, tea.Cmd) {
 
 	m.promptHost = host.Name
 	title := "Move " + host.Name + " to folder"
-	if current := store.FolderOf(host.Name); current != "" {
+	current := store.FolderOf(host.Name)
+	if current != "" {
 		title += " (current: " + current + ")"
 	}
-	m.openPrompt(promptMoveHost, title, "folder name (empty = root)", "")
+
+	folders := store.AllFolders()
+	if len(folders) == 0 {
+		m.openPrompt(promptMoveHost, title, "folder name (empty = root)", "")
+		return *m, textinput.Blink
+	}
+
+	sort.Strings(folders)
+
+	// Root first (to pull the host out of any folder), then every existing
+	// folder, then an escape hatch to type a brand new path.
+	options := make([]string, 0, len(folders)+2)
+	options = append(options, "")
+	options = append(options, folders...)
+	options = append(options, promptPickerNewFolder)
+
+	m.promptTitle = title
+	m.promptOptions = options
+	m.promptCursor = 0
+	for i, option := range options {
+		if option == current {
+			m.promptCursor = i
+			break
+		}
+	}
+	m.promptMode = promptMoveHostPicker
+	m.promptError = ""
+	m.table.Blur()
+	return *m, nil
+}
+
+// openMoveHostTypePrompt switches the move picker over to the free-form path
+// prompt so a brand new folder path can be entered.
+func (m *Model) openMoveHostTypePrompt() (Model, tea.Cmd) {
+	m.openPrompt(promptMoveHost, m.promptTitle, "folder name (empty = root)", "")
 	return *m, textinput.Blink
 }
 
@@ -290,6 +329,8 @@ func (m *Model) closePrompt() {
 	m.promptHost = ""
 	m.promptFolder = ""
 	m.promptError = ""
+	m.promptOptions = nil
+	m.promptCursor = 0
 	m.promptInput.SetValue("")
 	m.promptInput.Blur()
 	m.table.Focus()
@@ -301,7 +342,13 @@ func (m Model) handlePromptKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "esc", "ctrl+c":
 		m.closePrompt()
 		return m, nil
-	case "enter":
+	}
+
+	if m.promptMode == promptMoveHostPicker {
+		return m.handleMovePickerKeys(msg)
+	}
+
+	if msg.String() == "enter" {
 		return m.submitPrompt()
 	}
 
@@ -316,6 +363,33 @@ func (m Model) handlePromptKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	m.promptInput, cmd = m.promptInput.Update(msg)
 	m.promptError = ""
 	return m, cmd
+}
+
+// handleMovePickerKeys navigates the folder picker shown when moving a host.
+func (m Model) handleMovePickerKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "up", "ctrl+p", "k":
+		if m.promptCursor > 0 {
+			m.promptCursor--
+		}
+	case "down", "ctrl+n", "j":
+		if m.promptCursor < len(m.promptOptions)-1 {
+			m.promptCursor++
+		}
+	case "enter":
+		if m.promptCursor < 0 || m.promptCursor >= len(m.promptOptions) {
+			return m, nil
+		}
+		choice := m.promptOptions[m.promptCursor]
+		if choice == promptPickerNewFolder {
+			return m.openMoveHostTypePrompt()
+		}
+		// Reuse the free-form submit path by seeding the input with the choice.
+		m.promptInput.SetValue(choice)
+		m.promptMode = promptMoveHost
+		return m.submitPrompt()
+	}
+	return m, nil
 }
 
 // submitPrompt applies the action of the currently open prompt.

@@ -126,7 +126,7 @@ baq
 - `d` - Delete selected host
 - `m` - Move host to another config file (requires SSH Include directives; falls back to moving into a folder when there is only one config file)
 - `N` - New folder (use `prod/web` to create nested subfolders)
-- `M` - Move the selected host into a folder
+- `M` - Move the selected host into a folder (pick from the folders you already have, or choose "+ New folder…" to type a new path)
 - `R` - Rename the selected folder
 - `D` - Delete the selected folder (its hosts move up one level)
 - `f` - Port forwarding setup
@@ -138,8 +138,9 @@ baq
 **Folders:**
 - Press `N` to create a folder; type a path like `prod/web/db` to create nested
   subfolders in one go.
-- Select a host and press `M` to move it into a folder (an empty name moves it
-  back to the root).
+- Select a host and press `M` to move it into a folder. The picker lists the
+  folders you already have (choose the root entry to move it back out, or
+  `+ New folder…` to type a brand new path).
 - `→`/`←` (or `Enter`/`Space`) expand and collapse folders; folders remember
   their state between runs.
 - Searching expands every folder automatically so matches inside them are

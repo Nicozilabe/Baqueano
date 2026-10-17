@@ -244,12 +244,14 @@ func TestCreateFolderKeepsCursorOnHost(t *testing.T) {
 		t.Fatalf("after creating a folder, selected host = %q (ok=%v), want server1", host.Name, ok)
 	}
 
-	// The move shortcut must now be able to target the folder.
+	// The move shortcut must now be able to target the folder: it opens a
+	// picker listing the existing folders so the name is not typed by hand.
 	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
-	if m.promptMode != promptMoveHost {
-		t.Fatalf("M did not open the move prompt (promptMode = %v)", m.promptMode)
+	if m.promptMode != promptMoveHostPicker {
+		t.Fatalf("M did not open the folder picker (promptMode = %v)", m.promptMode)
 	}
-	m, _ = press(t, m, typed("prod")...)
+	// Options are [root, prod, new]; step down to "prod" and confirm.
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyDown})
 	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
 
 	if got := m.folderStore.FolderOf("server1"); got != "prod" {
@@ -282,6 +284,9 @@ func TestMoveHostReplacesFolder(t *testing.T) {
 	if err := m.folderStore.SetHostFolder("server1", "prod"); err != nil {
 		t.Fatal(err)
 	}
+	if err := m.folderStore.CreateFolder("staging"); err != nil {
+		t.Fatal(err)
+	}
 	m.updateTableRows()
 	hostIdx := -1
 	for i, n := range m.treeNodes {
@@ -296,18 +301,132 @@ func TestMoveHostReplacesFolder(t *testing.T) {
 	m.table.SetCursor(hostIdx)
 
 	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
-	if m.promptMode != promptMoveHost {
-		t.Fatalf("promptMode = %v, want promptMoveHost", m.promptMode)
+	if m.promptMode != promptMoveHostPicker {
+		t.Fatalf("promptMode = %v, want promptMoveHostPicker", m.promptMode)
 	}
-	if got := m.promptInput.Value(); got != "" {
-		t.Fatalf("move prompt should start empty, got %q", got)
+	// The picker should be positioned on the host's current folder.
+	if got := m.promptOptions[m.promptCursor]; got != "prod" {
+		t.Fatalf("picker preselected %q, want prod", got)
 	}
-
-	m, _ = press(t, m, typed("staging")...)
+	// Options are [root, prod, staging, new]; step down to "staging".
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyDown})
 	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
 
 	if got := m.folderStore.FolderOf("server1"); got != "staging" {
 		t.Errorf("FolderOf(server1) = %q, want staging", got)
+	}
+}
+
+// TestMoveHostPickerShowsFolders verifies the picker lists existing folders
+// instead of asking for a free-form name.
+func TestMoveHostPickerShowsFolders(t *testing.T) {
+	m := folderTestModel(t)
+	for _, f := range []string{"prod", "staging/web"} {
+		if err := m.folderStore.CreateFolder(f); err != nil {
+			t.Fatal(err)
+		}
+	}
+	m.updateTableRows()
+	hostIdx := -1
+	for i, n := range m.treeNodes {
+		if n.kind == nodeKindHost && n.name == "server1" {
+			hostIdx = i
+			break
+		}
+	}
+	if hostIdx < 0 {
+		t.Fatal("server1 not found in tree")
+	}
+	m.table.SetCursor(hostIdx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
+	if m.promptMode != promptMoveHostPicker {
+		t.Fatalf("promptMode = %v, want promptMoveHostPicker", m.promptMode)
+	}
+
+	seen := map[string]bool{}
+	for _, opt := range m.promptOptions {
+		seen[opt] = true
+	}
+	if !seen["prod"] || !seen["staging"] || !seen["staging/web"] {
+		t.Errorf("picker options %v do not include every existing folder", m.promptOptions)
+	}
+	if !seen[promptPickerNewFolder] {
+		t.Errorf("picker options %v lack the 'new folder' entry", m.promptOptions)
+	}
+
+	if out := m.renderFolderPrompt(); out == "" {
+		t.Error("picker render returned empty output")
+	}
+}
+
+// TestMoveHostPickerNewFolder verifies the picker's "new folder" entry drops
+// into the free-form path prompt and still moves the host.
+func TestMoveHostPickerNewFolder(t *testing.T) {
+	m := folderTestModel(t)
+	if err := m.folderStore.CreateFolder("prod"); err != nil {
+		t.Fatal(err)
+	}
+	m.updateTableRows()
+	hostIdx := -1
+	for i, n := range m.treeNodes {
+		if n.kind == nodeKindHost && n.name == "server1" {
+			hostIdx = i
+			break
+		}
+	}
+	m.table.SetCursor(hostIdx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
+	if m.promptMode != promptMoveHostPicker {
+		t.Fatalf("promptMode = %v, want promptMoveHostPicker", m.promptMode)
+	}
+	// Jump to the last entry, "+ New folder…".
+	for m.promptCursor < len(m.promptOptions)-1 {
+		m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyDown})
+	}
+	if got := m.promptOptions[m.promptCursor]; got != promptPickerNewFolder {
+		t.Fatalf("last option = %q, want the new-folder entry", got)
+	}
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+	if m.promptMode != promptMoveHost {
+		t.Fatalf("promptMode = %v, want promptMoveHost after choosing new folder", m.promptMode)
+	}
+	m, _ = press(t, m, typed("team/db")...)
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	if got := m.folderStore.FolderOf("server1"); got != "team/db" {
+		t.Errorf("FolderOf(server1) = %q, want team/db", got)
+	}
+}
+
+// TestMoveHostPickerToRoot verifies the picker can pull a host back to the root.
+func TestMoveHostPickerToRoot(t *testing.T) {
+	m := folderTestModel(t)
+	if err := m.folderStore.SetHostFolder("server1", "prod"); err != nil {
+		t.Fatal(err)
+	}
+	m.updateTableRows()
+	hostIdx := -1
+	for i, n := range m.treeNodes {
+		if n.kind == nodeKindHost && n.name == "server1" {
+			hostIdx = i
+			break
+		}
+	}
+	m.table.SetCursor(hostIdx)
+
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("M")})
+	// Preselected on "prod"; step up to the root entry.
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyUp})
+	if got := m.promptOptions[m.promptCursor]; got != "" {
+		t.Fatalf("picker preselected %q, want root", got)
+	}
+	m, _ = press(t, m, tea.KeyMsg{Type: tea.KeyEnter})
+
+	if got := m.folderStore.FolderOf("server1"); got != "" {
+		t.Errorf("FolderOf(server1) = %q, want root", got)
 	}
 }
 

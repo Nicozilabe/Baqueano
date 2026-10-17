@@ -119,12 +119,14 @@ type Model struct {
 	treeNodes       []treeNode      // flattened rows shown in the table
 
 	// Inline prompt (create folder, rename, move host, ...)
-	promptMode   promptMode
-	promptTitle  string
-	promptInput  textinput.Model
-	promptHost   string // host being moved
-	promptFolder string // folder being renamed/deleted
-	promptError  string
+	promptMode    promptMode
+	promptTitle   string
+	promptInput   textinput.Model
+	promptHost    string // host being moved
+	promptFolder  string // folder being renamed/deleted
+	promptError   string
+	promptOptions []string // choices shown by the folder picker
+	promptCursor  int      // highlighted choice in the folder picker
 }
 
 // promptMode identifies which inline prompt is currently open.
@@ -134,9 +136,13 @@ const (
 	promptNone promptMode = iota
 	promptNewFolder
 	promptMoveHost
+	promptMoveHostPicker
 	promptRenameFolder
 	promptDeleteFolder
 )
+
+// Value used by the move picker to offer creating a brand new folder path.
+const promptPickerNewFolder = "\x00new"
 
 // applyVisibilityFilter returns hosts filtered according to the showHidden flag.
 func (m Model) applyVisibilityFilter(hosts []config.SSHHost) []config.SSHHost {

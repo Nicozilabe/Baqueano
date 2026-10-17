@@ -90,7 +90,7 @@ func (m *helpModel) View() string {
 			m.styles.HelpText.Render("new folder (prod/web nests)")),
 		lipgloss.JoinHorizontal(lipgloss.Left,
 			m.styles.FocusedLabel.Render("M  "),
-			m.styles.HelpText.Render("move host into a folder")),
+			m.styles.HelpText.Render("move host into a folder (pick or create)")),
 		lipgloss.JoinHorizontal(lipgloss.Left,
 			m.styles.FocusedLabel.Render("R  "),
 			m.styles.HelpText.Render("rename folder")),

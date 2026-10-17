@@ -191,6 +191,11 @@ func (m Model) renderFolderPrompt() string {
 			"",
 			hintStyle.Render("Enter/y: confirm • Esc: cancel"),
 		)
+	case promptMoveHostPicker:
+		selectedStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(PrimaryColor))
+		for _, line := range m.renderPickerLines(selectedStyle, hintStyle) {
+			lines = append(lines, line)
+		}
 	default:
 		m.promptInput.Width = m.promptInputWidth()
 		lines = append(lines, m.promptInput.View())
@@ -219,6 +224,52 @@ func (m Model) renderFolderPrompt() string {
 		PaddingTop(1).PaddingBottom(1).PaddingLeft(2).PaddingRight(2).
 		Width(maxw + 4).
 		Render(raw)
+}
+
+// renderPickerLines renders the folder choices of the move-host picker,
+// scrolling a window around the highlighted choice when there are many folders.
+func (m Model) renderPickerLines(selectedStyle, hintStyle lipgloss.Style) []string {
+	const maxVisible = 10
+
+	options := m.promptOptions
+	start := 0
+	if len(options) > maxVisible {
+		start = m.promptCursor - maxVisible/2
+		if start < 0 {
+			start = 0
+		}
+		if start > len(options)-maxVisible {
+			start = len(options) - maxVisible
+		}
+	}
+	end := start + maxVisible
+	if end > len(options) {
+		end = len(options)
+	}
+
+	var lines []string
+	if start > 0 {
+		lines = append(lines, hintStyle.Render("  ↑ more"))
+	}
+	for i := start; i < end; i++ {
+		label := options[i]
+		switch label {
+		case "":
+			label = "(root / no folder)"
+		case promptPickerNewFolder:
+			label = "+ New folder… (type a path)"
+		}
+		if i == m.promptCursor {
+			lines = append(lines, selectedStyle.Render("> "+label))
+		} else {
+			lines = append(lines, "  "+label)
+		}
+	}
+	if end < len(options) {
+		lines = append(lines, hintStyle.Render("  ↓ more"))
+	}
+	lines = append(lines, "", hintStyle.Render("↑/↓: choose • Enter: confirm • Esc: cancel"))
+	return lines
 }
 
 // renderDeleteConfirmation renders a clean delete confirmation dialog
